@@ -142,7 +142,11 @@ class Section
                     $modifier->setDescription($modifier->getDescription() + trim($line));
                 } else {
                     $lineParts = explode(' - ', $line);
-                    $modifiers[] = new Modifier(trim($lineParts[0]), trim($lineParts[1]));
+                    $description = '';
+                    if (array_key_exists(1, $lineParts)) {
+                        $description = trim($lineParts[1]);
+                    }
+                    $modifiers[] = new Modifier(trim($lineParts[0]), $description);
                 }
             }
         }
