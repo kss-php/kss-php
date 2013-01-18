@@ -25,6 +25,13 @@ class Modifier
     protected $description = '';
 
     /**
+     * Flag to show whether a modifier is done through extension
+     *
+     * @var boolean
+     */
+    protected $isExtender = false;
+
+    /**
      * Creates a new modifier by adding a name and a description
      *
      * @param string $name
@@ -53,6 +60,11 @@ class Modifier
      */
     public function setName($name)
     {
+        $this->isExtender = false;
+        if (preg_match('/\s*@extender/i', $name)) {
+            $name = preg_replace('/\s*@extender/i', '', $name);
+            $this->isExtender = true;
+        }
         $this->name = $name;
     }
 
@@ -74,6 +86,16 @@ class Modifier
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    /**
+     * Returns whether the modifier is applied by extension
+     *
+     * @return boolean
+     */
+    public function isExtender()
+    {
+        return $this->isExtender;
     }
 
     /**

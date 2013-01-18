@@ -40,6 +40,13 @@ class Section
     protected $section = null;
 
     /**
+     * The base class extended by extenders
+     *
+     * @var string
+     */
+    protected $baseExtensionClass = null;
+
+    /**
      * Creates a section with the KSS Comment Block and source file
      *
      * @param string $comment
@@ -77,22 +84,20 @@ class Section
     }
 
     /**
-     * Returns the reference number for the section
+     * Returns the title of the section
      *
      * @return string
      */
-    public function getSection()
+    public function getTitle()
     {
-        if ($this->section === null) {
-            $sectionComment = $this->getSectionComment();
-            $sectionComment = preg_replace('/\.$/', '', $sectionComment);
+        $title = '';
 
-            if (preg_match('/Styleguide (\d\S+)/', $sectionComment, $matches)) {
-                $this->section = $matches[1];
-            }
+        $titleComment = $this->getTitleComment();
+        if (preg_match('/^\s*#+\s*(.+)/', $titleComment, $matches)) {
+            $title = $matches[1];
         }
 
-        return $this->section;
+        return $title;
     }
 
     /**
@@ -108,6 +113,8 @@ class Section
             // Anything that is not the section comment or modifiers comment
             // must be the description comment
             if ($commentSection != $this->getSectionComment()
+                && $commentSection != $this->getTitleComment()
+                && $commentSection != $this->getBaseExtensionComment()
                 && $commentSection != $this->getModifiersComment()
             ) {
                 $descriptionSections[] = $commentSection;
@@ -115,6 +122,23 @@ class Section
         }
 
         return implode("\n\n", $descriptionSections);
+    }
+
+    /**
+     * Returns the base extension class that all extenders extend from
+     *
+     * @return string
+     */
+    public function getBaseExtensionClass()
+    {
+        if ($this->baseExtensionClass === null) {
+            $this->baseExtensionClass = '';
+            if ($extensionComment = $this->getBaseExtensionComment()) {
+                $this->baseExtensionClass = trim(str_replace('%', '', $extensionComment));
+            }
+        }
+
+        return $this->baseExtensionClass;
     }
 
     /**
@@ -155,6 +179,65 @@ class Section
     }
 
     /**
+     * Returns the reference number for the section
+     *
+     * @return string
+     */
+    public function getSection()
+    {
+        if ($this->section === null) {
+            $sectionComment = $this->getSectionComment();
+            $sectionComment = preg_replace('/\.$/', '', $sectionComment);
+
+            if (preg_match('/Styleguide (\d\S+)/', $sectionComment, $matches)) {
+                $this->section = $matches[1];
+            }
+        }
+
+        return $this->section;
+    }
+
+    /**
+     * Gets the title part of the KSS Comment Block
+     *
+     * @return string
+     */
+    protected function getTitleComment()
+    {
+        $titleComment = null;
+
+        foreach ($this->getCommentSections() as $commentSection) {
+            // Identify the title by the # markdown header syntax
+            if (preg_match('/^\s*#/i', $commentSection)) {
+                $titleComment = $commentSection;
+                break;
+            }
+        }
+
+        return $titleComment;
+    }
+
+    /**
+     * Gets the baseExtension part of the KSS Comment Block
+     *
+     * @return string
+     */
+    protected function getBaseExtensionComment()
+    {
+        $baseExtensionComment = null;
+
+        foreach ($this->getCommentSections() as $commentSection) {
+            // Identify the baseExtensionComment by the SASS % placeholder selector
+            if (preg_match('/^\s*%/i', $commentSection)) {
+                $baseExtensionComment = $commentSection;
+                break;
+            }
+        }
+
+        return $baseExtensionComment;
+    }
+
+    /**
      * Gets the part of the KSS Comment Block that contains the section reference
      *
      * @return string
@@ -185,7 +268,7 @@ class Section
 
         foreach ($this->getCommentSections() as $commentSection) {
             // Assume that the modifiers section starts with either a class or a
-            // pseudo class.
+            // pseudo class
             if (preg_match('/^\s*(?:\.|:)/', $commentSection)) {
                 $modifiersComment = $commentSection;
                 break;
