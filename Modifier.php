@@ -25,11 +25,11 @@ class Modifier
     protected $description = '';
 
     /**
-     * Flag to show whether a modifier is done through extension
+     * Class that this modifier extends from
      *
-     * @var boolean
+     * @var string
      */
-    protected $isExtender = false;
+    protected $extendedClass = null;
 
     /**
      * Creates a new modifier by adding a name and a description
@@ -60,11 +60,7 @@ class Modifier
      */
     public function setName($name)
     {
-        $this->isExtender = false;
-        if (preg_match('/\s*@extender/i', $name)) {
-            $name = preg_replace('/\s*@extender/i', '', $name);
-            $this->isExtender = true;
-        }
+        $name = $this->parseExtend($name);
         $this->name = $name;
     }
 
@@ -89,13 +85,73 @@ class Modifier
     }
 
     /**
+     * Checks the name for any extend notations and parses that information
+     * off and stores it in the $this->extendedClass
+     *
+     * @param string $name
+     *
+     * @return $name
+     */
+    protected function parseExtend($name)
+    {
+        $this->setExtendedClass(null);
+
+        $nameParts = explode('@extend', $name);
+        $name = trim($nameParts[0]);
+        if (count($nameParts) > 1) {
+            $this->setExtendedClass($nameParts[1]);
+        }
+
+        return $name;
+    }
+
+    /**
      * Returns whether the modifier is applied by extension
      *
      * @return boolean
      */
     public function isExtender()
     {
-        return $this->isExtender;
+        return $this->getExtendedClass();
+    }
+
+    /**
+     * Returns the extended class
+     *
+     * @return string
+     */
+    public function getExtendedClass()
+    {
+        return $this->extendedClass;
+    }
+
+    /**
+     * Sets the extended class. If the class name is empty, assuming null instead
+     * and stop further parsing
+     *
+     * @param string $class
+     */
+    public function setExtendedClass($class)
+    {
+        if (empty($class)) {
+            $this->extenderClass = null;
+            return;
+        }
+
+        $this->extendedClass = trim($class);
+    }
+
+    /**
+     * Returns the class name for the extended class
+     *
+     * @return string
+     */
+    public function getExtendedClassName()
+    {
+        $name = str_replace('%', ' ', $this->getExtendedClass());
+        $name = str_replace('.', ' ', $name);
+        $name = str_replace(':', ' pseudo-class-', $name);
+        return trim($name);
     }
 
     /**
@@ -108,5 +164,24 @@ class Modifier
         $name = str_replace('.', ' ', $this->name);
         $name = str_replace(':', ' pseudo-class-', $name);
         return trim($name);
+    }
+
+    /**
+     * Returns a string of specified html with inserted class names in the correct
+     * places for modifiers and extenders.
+     *
+     * @param string $html
+     *
+     * @return string $html
+     */
+    public function getExampleHtml($html)
+    {
+        if ($this->isExtender()) {
+            $html = str_replace('$modifierClass', '', $html);
+            $html = str_replace($this->getExtendedClassName(), $this->getClassName(), $html);
+        }
+        $html = str_replace('$modifierClass', $this->getClassName(), $html);
+
+        return $html;
     }
 }

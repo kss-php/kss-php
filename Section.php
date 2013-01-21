@@ -40,13 +40,6 @@ class Section
     protected $section = null;
 
     /**
-     * The base class extended by extenders
-     *
-     * @var string
-     */
-    protected $baseExtensionClass = null;
-
-    /**
      * Creates a section with the KSS Comment Block and source file
      *
      * @param string $comment
@@ -114,7 +107,6 @@ class Section
             // must be the description comment
             if ($commentSection != $this->getSectionComment()
                 && $commentSection != $this->getTitleComment()
-                && $commentSection != $this->getBaseExtensionComment()
                 && $commentSection != $this->getModifiersComment()
             ) {
                 $descriptionSections[] = $commentSection;
@@ -122,23 +114,6 @@ class Section
         }
 
         return implode("\n\n", $descriptionSections);
-    }
-
-    /**
-     * Returns the base extension class that all extenders extend from
-     *
-     * @return string
-     */
-    public function getBaseExtensionClass()
-    {
-        if ($this->baseExtensionClass === null) {
-            $this->baseExtensionClass = '';
-            if ($extensionComment = $this->getBaseExtensionComment()) {
-                $this->baseExtensionClass = trim(str_replace('%', '', $extensionComment));
-            }
-        }
-
-        return $this->baseExtensionClass;
     }
 
     /**
@@ -215,26 +190,6 @@ class Section
         }
 
         return $titleComment;
-    }
-
-    /**
-     * Gets the baseExtension part of the KSS Comment Block
-     *
-     * @return string
-     */
-    protected function getBaseExtensionComment()
-    {
-        $baseExtensionComment = null;
-
-        foreach ($this->getCommentSections() as $commentSection) {
-            // Identify the baseExtensionComment by the SASS % placeholder selector
-            if (preg_match('/^\s*%/i', $commentSection)) {
-                $baseExtensionComment = $commentSection;
-                break;
-            }
-        }
-
-        return $baseExtensionComment;
     }
 
     /**
