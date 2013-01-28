@@ -6,7 +6,7 @@
  * Object to represent the modifiers section of a KSS Comment Block
  */
 
-namespace Scan\Bundle\KssBundle\Model;
+namespace Scan\Kss;
 
 class Modifier
 {
@@ -112,7 +112,7 @@ class Modifier
      */
     public function isExtender()
     {
-        return $this->getExtendedClass();
+        return (bool) $this->getExtendedClass();
     }
 
     /**
@@ -148,6 +148,10 @@ class Modifier
      */
     public function getExtendedClassName()
     {
+        if ($this->getExtendedClass() === null) {
+            return '';
+        }
+
         $name = str_replace('%', ' ', $this->getExtendedClass());
         $name = str_replace('.', ' ', $name);
         $name = str_replace(':', ' pseudo-class-', $name);

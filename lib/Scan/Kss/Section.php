@@ -7,7 +7,7 @@
  * modifiers, and a section reference.
  */
 
-namespace Scan\Bundle\KssBundle\Model;
+namespace Scan\Kss;
 
 class Section
 {
@@ -57,7 +57,7 @@ class Section
      *
      * @return array
      */
-    public function getCommentSections()
+    protected function getCommentSections()
     {
         if ($this->commentSections === null && $this->rawComment) {
             $this->commentSections = explode("\n\n", $this->rawComment);
@@ -73,6 +73,10 @@ class Section
      */
     public function getFilename()
     {
+        if ($this->file === null) {
+            return '';
+        }
+
         return $this->file->getFilename();
     }
 

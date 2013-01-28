@@ -7,7 +7,7 @@
  * in the object for later use.
  */
 
-namespace Scan\Bundle\KssBundle\Model;
+namespace Scan\Kss;
 
 class CommentParser
 {
@@ -171,7 +171,7 @@ class CommentParser
      */
     public static function isSingleLineComment($line)
     {
-        return preg_match('-^\s*//-', $line);
+        return (bool) preg_match('-^\s*//-', $line);
     }
 
     /**
@@ -183,7 +183,7 @@ class CommentParser
      */
     public static function isStartMultiLineComment($line)
     {
-        return preg_match('-^\s*/\*-', $line);
+        return (bool) preg_match('-^\s*/\*-', $line);
     }
 
     /**
@@ -195,7 +195,7 @@ class CommentParser
      */
     public static function isEndMultiLineComment($line)
     {
-        return preg_match('-^\s*\*/-', $line);
+        return (bool) preg_match('-.*\*/-', $line);
     }
 
     /**
@@ -220,7 +220,7 @@ class CommentParser
     public static function parseMultiLineComment($line)
     {
         $parsed = preg_replace('-^\s*/\*+-', '', $line);
-        $parsed = preg_replace('-^\s*\*/-', '', $parsed);
+        $parsed = preg_replace('-\*/-', '', $parsed);
         return rtrim($parsed);
     }
 }

@@ -7,7 +7,7 @@
  * them for KSS Comment Blocks
  */
 
-namespace Scan\Bundle\KssBundle\Model;
+namespace Scan\Kss;
 
 use Symfony\Component\Finder\Finder;
 
@@ -83,6 +83,6 @@ class Parser
     {
         $commentLines = explode("\n\n", $comment);
         $lastLine = end($commentLines);
-        return preg_match('/Styleguide \d/i', $lastLine);
+        return (bool) preg_match('/Styleguide \d/i', $lastLine);
     }
 }
