@@ -17,7 +17,11 @@ KSS is a documenting syntax for CSS.
 
 ```css
 /*
+# Star Button
+
 A button suitable for giving stars to someone.
+
+Markup: <a class="button star $modifierClass">Button</a>
 
 :hover             - Subtle hover highlight.
 .stars-given       - A highlight indicating you've already given a star.
@@ -52,8 +56,14 @@ $styleguide = new \Scan\Kss\Parser('public/stylesheets')
 $section = $styleguide->getSection('2.1.1');
 // Returns a \Scan\Kss\Section object
 
+echo $section->getTitle();
+// Echoes "Star Button"
+
 echo $section->getDescription();
 // echoes "A button suitable for giving stars to someone."
+
+echo $section->getMarkup();
+// echoes "<a class="button star $modifierClass">Button</a>"
 
 $modifier = current($section->getModifiers());
 // Returns a \Scan\Kss\Modifier object
@@ -66,6 +76,9 @@ echo $modifier->getClassName();
 
 echo $modifier->getDescription();
 // echoes 'Subtle hover highlight'
+
+echo $modifier->getExampleHtml();
+// echoes <a class="button stars stars-given">Button</a> for the .stars-given modifier
 ```
 
 ## Generating styleguides

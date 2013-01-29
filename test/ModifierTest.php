@@ -12,10 +12,12 @@ class ModifierTest extends \PHPUnit_Framework_TestCase
         $name = '.modifier';
         $description = 'This is a test modifier';
         self::$modifier = new \Scan\Kss\Modifier($name, $description);
+        self::$modifier->setMarkup('<div class="plainClass $modifierClass">test</div>');
 
         $name = '.extenderModifier @extend .modifier';
         $description = 'This is a test modifier that extends from .modifier';
         self::$extenderModifier = new \Scan\Kss\Modifier($name, $description);
+        self::$extenderModifier->setMarkup('<div class="modifier $modifierClass">test</div>');
     }
 
     /**
@@ -105,9 +107,8 @@ class ModifierTest extends \PHPUnit_Framework_TestCase
      */
     public function getExampleHtml()
     {
-        $exampleHtml = '<div class="$modifierClass"></div>';
-        $html = self::$modifier->getExampleHtml($exampleHtml);
-        $expected = '<div class="modifier"></div>';
+        $html = self::$modifier->getExampleHtml();
+        $expected = '<div class="plainClass modifier">test</div>';
         $this->assertEquals($expected, $html);
     }
 
@@ -116,9 +117,30 @@ class ModifierTest extends \PHPUnit_Framework_TestCase
      */
     public function getExtenderExampleHtml()
     {
-        $exampleHtml = '<div class="modifier $modifierClass"></div>';
+        $html = self::$extenderModifier->getExampleHtml();
+        $expected = '<div class="extenderModifier ">test</div>';
+        $this->assertEquals($expected, $html);
+    }
+
+    /**
+     * @test
+     */
+    public function getExampleHtmlSpecified()
+    {
+        $exampleHtml = '<span class="$modifierClass">test2</span>';
+        $html = self::$modifier->getExampleHtml($exampleHtml);
+        $expected = '<span class="modifier">test2</span>';
+        $this->assertEquals($expected, $html);
+    }
+
+    /**
+     * @test
+     */
+    public function getExtenderExampleHtmlSpecified()
+    {
+        $exampleHtml = '<span class="modifier $modifierClass">test2</span>';
         $html = self::$extenderModifier->getExampleHtml($exampleHtml);
-        $expected = '<div class="extenderModifier "></div>';
+        $expected = '<span class="extenderModifier ">test2</span>';
         $this->assertEquals($expected, $html);
     }
 }

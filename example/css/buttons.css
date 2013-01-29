@@ -3,6 +3,8 @@
 
 Your standard form button.
 
+Markup: <button class="$modifierClass">Example Button</button>
+
 :hover    - Highlights when hovering.
 :disabled - Dims the button when disabled.
 .primary  - Indicates button is the primary action.

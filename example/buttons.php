@@ -25,7 +25,6 @@
 
             $kss = new \Scan\Kss\Parser('css');
             $section = $kss->getSection('1.1');
-            $html = '<button class="$modifierClass">Example Button</button>';
             require('block.inc.php');
         ?>
 
@@ -35,7 +34,6 @@
 
     $kss = new \Scan\Kss\Parser('css');
     $section = $kss->getSection('1.1');
-    $html = '&lt;button class="$modifierClass"&gt;Example Button&lt;/button&gt;';
     require('block.inc.php');
 ?&gt;</code></pre>
         <p>

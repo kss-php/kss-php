@@ -33,6 +33,13 @@ class Section
     protected $file = null;
 
     /**
+     * The parsed markup comment in the KSS Block
+     *
+     * @var string
+     */
+    protected $markup = null;
+
+    /**
      * The section reference identifier
      *
      * @var string
@@ -49,21 +56,6 @@ class Section
     {
         $this->rawComment = $comment;
         $this->file = $file;
-    }
-
-    /**
-     * Returns the comment block used when creating the section as an array of
-     * paragraphs within the comment block
-     *
-     * @return array
-     */
-    protected function getCommentSections()
-    {
-        if ($this->commentSections === null && $this->rawComment) {
-            $this->commentSections = explode("\n\n", $this->rawComment);
-        }
-
-        return $this->commentSections;
     }
 
     /**
@@ -111,6 +103,7 @@ class Section
             // must be the description comment
             if ($commentSection != $this->getSectionComment()
                 && $commentSection != $this->getTitleComment()
+                && $commentSection != $this->getMarkupComment()
                 && $commentSection != $this->getModifiersComment()
             ) {
                 $descriptionSections[] = $commentSection;
@@ -118,6 +111,22 @@ class Section
         }
 
         return implode("\n\n", $descriptionSections);
+    }
+
+    /**
+     * Returns the markup defined in the section
+     *
+     * @return string
+     */
+    public function getMarkup()
+    {
+        if ($this->markup === null) {
+            if ($markupComment = $this->getMarkupComment()) {
+                $this->markup = trim(preg_replace('/^\s*Markup:/i', '', $markupComment));
+            }
+        }
+
+        return $this->markup;
     }
 
     /**
@@ -131,8 +140,8 @@ class Section
         $modifiers = array();
 
         if ($modiferComment = $this->getModifiersComment()) {
-            $commentLines = explode("\n", $modiferComment);
-            foreach ($commentLines as $line) {
+            $modifierLines = explode("\n", $modiferComment);
+            foreach ($modifierLines as $line) {
                 if (empty($line)) {
                     continue;
                 }
@@ -149,7 +158,13 @@ class Section
                     if (array_key_exists(1, $lineParts)) {
                         $description = trim($lineParts[1]);
                     }
-                    $modifiers[] = new Modifier(trim($lineParts[0]), $description);
+                    $modifier = new Modifier(trim($lineParts[0]), $description);
+
+                    // If the CSS has a markup, pass it to the modifier for the example HTML
+                    if ($markup = $this->getMarkup()) {
+                        $modifier->setMarkup($markup);
+                    }
+                    $modifiers[] = $modifier;
                 }
             }
         }
@@ -177,6 +192,21 @@ class Section
     }
 
     /**
+     * Returns the comment block used when creating the section as an array of
+     * paragraphs within the comment block
+     *
+     * @return array
+     */
+    protected function getCommentSections()
+    {
+        if ($this->commentSections === null && $this->rawComment) {
+            $this->commentSections = explode("\n\n", $this->rawComment);
+        }
+
+        return $this->commentSections;
+    }
+
+    /**
      * Gets the title part of the KSS Comment Block
      *
      * @return string
@@ -194,6 +224,26 @@ class Section
         }
 
         return $titleComment;
+    }
+
+    /**
+     * Returns the part of the KSS Comment Block that contains the markup
+     *
+     * @return string
+     */
+    protected function getMarkupComment()
+    {
+        $markupComment = null;
+
+        foreach ($this->getCommentSections() as $commentSection) {
+            // Identify the markup comment by the Markup: marker
+            if (preg_match('/^\s*Markup:/i', $commentSection)) {
+                $markupComment = $commentSection;
+                break;
+            }
+        }
+
+        return $markupComment;
     }
 
     /**

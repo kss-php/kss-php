@@ -31,17 +31,17 @@
 
     <div class="styleguide-elements">
         <div class="styleguide-element">
-            <?php echo str_replace('$modifierClass', '', $html); ?>
+            <?php echo str_replace('$modifierClass', '', $section->getMarkup()); ?>
         </div>
         <?php foreach ($section->getModifiers() as $modifier) { ?>
             <div class="styleguide-element styleguide-modifier <?php ($modifier->isExtender()) ? 'styleguide-extender' : ''; ?>">
                 <span class="styleguide-modifier-label <?php ($modifier->isExtender()) ? 'styleguide-extender-label' : ''; ?>"><?php echo  $modifier->getName(); ?></span>
-                <?php echo $modifier->getExampleHtml($html); ?>
+                <?php echo $modifier->getExampleHtml(); ?>
             </div>
         <?php } ?>
     </div>
 
     <div class="styleguide-html">
-        <pre class="styleguide-code"><code><?php echo htmlentities($html); ?></code></pre>
+        <pre class="styleguide-code"><code><?php echo htmlentities($section->getMarkup()); ?></code></pre>
     </div>
 </div>

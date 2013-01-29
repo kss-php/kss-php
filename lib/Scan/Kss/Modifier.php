@@ -25,6 +25,13 @@ class Modifier
     protected $description = '';
 
     /**
+     * Optional markup for the modifier
+     *
+     * @var string
+     */
+    protected $markup = null;
+
+    /**
      * Class that this modifier extends from
      *
      * @var string
@@ -82,6 +89,26 @@ class Modifier
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    /**
+     * Returns the markup of the modifier
+     *
+     * @return string
+     */
+    public function getMarkup()
+    {
+        return $this->markup;
+    }
+
+    /**
+     * Sets the markup of the modifier
+     *
+     * @param string $markup
+     */
+    public function setMarkup($markup)
+    {
+        $this->markup = $markup;
     }
 
     /**
@@ -174,12 +201,19 @@ class Modifier
      * Returns a string of specified html with inserted class names in the correct
      * places for modifiers and extenders.
      *
-     * @param string $html
+     * @param string $html OPTIONAL
      *
      * @return string $html
      */
-    public function getExampleHtml($html)
+    public function getExampleHtml($html = null)
     {
+        if ($html === null) {
+            if ($this->getMarkup() === null) {
+                return '';
+            }
+            $html = $this->getMarkup();
+        }
+
         if ($this->isExtender()) {
             $html = str_replace('$modifierClass', '', $html);
             $html = str_replace($this->getExtendedClassName(), $this->getClassName(), $html);
