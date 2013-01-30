@@ -23,7 +23,7 @@ class Section
      *
      * @var array
      */
-    protected $commentSections = null;
+    protected $commentSections = array();
 
     /**
      * The file where the KSS Comment Block came from
@@ -183,12 +183,93 @@ class Section
             $sectionComment = $this->getSectionComment();
             $sectionComment = preg_replace('/\.$/', '', $sectionComment);
 
-            if (preg_match('/Styleguide (\d\S+)/', $sectionComment, $matches)) {
+            if (preg_match('/Styleguide (\d\S*)/', $sectionComment, $matches)) {
                 $this->section = $matches[1];
             }
         }
 
         return $this->section;
+    }
+
+    /**
+     * Helper method for calculating the depth of the instantiated section
+     *
+     * @return int
+     */
+    public function getDepth()
+    {
+        return self::calcDepth($this->getSection());
+    }
+
+    /**
+     * Calculates and returns the depth of a section reference
+     *
+     * @param string $reference
+     *
+     * @return int
+     */
+    public static function calcDepth($reference)
+    {
+        // Treat a reference such as 3.0.0 as being just 3 and having a depth of 0
+        // 3.1.0 should be treated a 3.1 and have a depth of 1
+        while (substr($reference, -2) == '.0') {
+            $reference = substr($reference, 0, -2);
+        }
+        return substr_count($reference, '.');
+    }
+
+    /**
+     * Helper method for calculating the score of the instantiated section
+     *
+     * @return int
+     */
+    public function getDepthScore()
+    {
+        return self::calcDepthScore($this->getSection());
+    }
+    /**
+     * Calculates and returns the depth score for the section. Useful for sorting
+     * sections correctly by their section reference numbers
+     *
+     * @return int
+     */
+    public static function calcDepthScore($reference)
+    {
+        $sectionParts = explode('.', $reference);
+        $score = 0;
+        foreach ($sectionParts as $level => $part) {
+            $score += $part * (1 / pow(10, $level));
+        }
+        return $score;
+    }
+
+    /**
+     * Function to help sort sections by depth and then depth score
+     *
+     * @param Section $a
+     * @param Section $b
+     *
+     * @return int
+     */
+    public static function depthSort(Section $a, Section $b)
+    {
+        if ($a->getDepth() == $b->getDepth()) {
+            return self::depthScoreSort($a, $b);
+        }
+        return $a->getDepth() > $b->getDepth();
+    }
+
+    /**
+     * Function to help sort sections by their depth score
+     *
+     * @param Section $a
+     * @param Section $b
+     *
+     * @return int
+     */
+    public static function depthScoreSort(Section $a, Section $b)
+    {
+        return $a->getDepthScore() > $b->getDepthScore();
     }
 
     /**
@@ -199,7 +280,7 @@ class Section
      */
     protected function getCommentSections()
     {
-        if ($this->commentSections === null && $this->rawComment) {
+        if (empty($this->commentSections) && $this->rawComment) {
             $this->commentSections = explode("\n\n", $this->rawComment);
         }
 

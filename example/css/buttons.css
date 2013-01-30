@@ -1,6 +1,12 @@
 /*
 # Buttons
 
+Styleguide 1
+*/
+
+/*
+# Standard Button
+
 Your standard form button.
 
 Markup: <button class="$modifierClass">Example Button</button>
@@ -12,6 +18,7 @@ Markup: <button class="$modifierClass">Example Button</button>
 
 Styleguide 1.1
 */
+
 button {
   padding: 5px 15px;
   line-height: normal;
@@ -52,3 +59,27 @@ button {
     border-bottom-color: #97c7dd; }
   button:disabled {
     opacity: 0.5; }
+
+/*
+# Star Buttons
+
+A button suitable for giving stars to someone.
+
+Markup: <a class="button star $modifierClass" href="#">Rate</a>
+
+.star-given - A highlight indicating you've already given a star.
+.disabled   - Dims the button to indicate it cannot be used.
+
+Styleguide 1.2
+*/
+a.button.star{
+  display:inline-block;
+ font-size:10px;
+}
+  a.button.star.star-given{
+    color:#ae7e00;
+  }
+
+  a.button.star.disabled{
+    opacity:0.5;
+  }

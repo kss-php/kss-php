@@ -88,6 +88,99 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @depends parseScss
+     */
+    public function getSection($parser)
+    {
+        $this->assertEquals('2.1.1', $parser->getSection('2.1.1')->getSection());
+    }
+
+    /**
+     * @test
+     * @depends parseScss
+     */
+    public function getSectionNotFound($parser)
+    {
+        $this->assertEmpty($parser->getSection('200.1.1')->getSection());
+    }
+
+    /**
+     * @test
+     * @depends parseScss
+     */
+    public function getSections($parser)
+    {
+        $this->assertCount(5, $parser->getSections());
+    }
+
+    /**
+     * @test
+     * @depends parseScss
+     */
+    public function getTopLevelSections($parser)
+    {
+        $expectedSections = array('2', '3.0.0');
+        $sections = $parser->getTopLevelSections();
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getSection());
+            ++$x;
+        }
+    }
+
+    /**
+     * @test
+     * @depends parseScss
+     */
+    public function getSectionChildren($parser)
+    {
+        $expectedSections = array('2.1.1', '2.2.1');
+        $sections = $parser->getSectionChildren('2');
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getSection());
+            ++$x;
+        }
+    }
+
+    /**
+     * @test
+     * @depends parseScss
+     */
+    public function getSectionChildrenWithDepth($parser)
+    {
+        $expectedSections = array('3.0.0');
+        $sections = $parser->getSectionChildren('3', 0);
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getSection());
+            ++$x;
+        }
+
+        $expectedSections = array('3.0.0');
+        $sections = $parser->getSectionChildren('3', 1);
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getSection());
+            ++$x;
+        }
+
+        $expectedSections = array('3.0.0', '3.0.1');
+        $sections = $parser->getSectionChildren('3', 2);
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getSection());
+            ++$x;
+        }
+    }
+
+    /**
+     * @test
      */
     public function isKssBlock()
     {

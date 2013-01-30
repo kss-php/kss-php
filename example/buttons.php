@@ -24,8 +24,10 @@
             require_once('../vendor/autoload.php');
 
             $kss = new \Scan\Kss\Parser('css');
-            $section = $kss->getSection('1.1');
-            require('block.inc.php');
+            $sections = $kss->getSectionChildren('1');
+            foreach ($sections as $section) {
+                require('block.inc.php');
+            }
         ?>
 
         <p>This block above was created with a simple php block:</p>
@@ -33,8 +35,10 @@
     require_once('../vendor/autoload.php');
 
     $kss = new \Scan\Kss\Parser('css');
-    $section = $kss->getSection('1.1');
-    require('block.inc.php');
+    $sections = $kss->getSectionChildren('1');
+    foreach ($sections as $section) {
+        require('block.inc.php');
+    }
 ?&gt;</code></pre>
         <p>
             Take a look at the source code for more details. The goal is to remove
