@@ -147,6 +147,64 @@ comment;
     /**
      * @test
      */
+    public function getReference()
+    {
+        $this->assertEquals('2.1.1', self::$section->getReference());
+
+        $section = new Section('// Styleguide 3.0.0');
+        $this->assertEquals('3.0.0', $section->getReference());
+    }
+
+    /**
+     * @test
+     */
+    public function getReferenceTrimmed()
+    {
+        $this->assertEquals('2.1.1', self::$section->getReference(true));
+
+        $section = new Section('// Styleguide 3.0.0');
+        $this->assertEquals('3', $section->getReference(true));
+    }
+
+    /**
+     * @test
+     */
+    public function trimReference()
+    {
+        $this->assertEquals('1.1.1', Section::trimReference('1.1.1'));
+        $this->assertEquals('1.1.1', Section::trimReference('1.1.1.'));
+        $this->assertEquals('1.1.1', Section::trimReference('1.1.1.0'));
+        $this->assertEquals('1.1.1', Section::trimReference('1.1.1.0.'));
+        $this->assertEquals('1.1.1', Section::trimReference('1.1.1.00000000'));
+        $this->assertEquals('1.1.1', Section::trimReference('1.1.1.00000000.'));
+        $this->assertEquals('1.1.1', Section::trimReference('1.1.1.0.0.0.0'));
+        $this->assertEquals('1.1.1', Section::trimReference('1.1.1.0.00.000.0000'));
+        $this->assertEquals('1.0.1.1.0.00.1.0.10000.10', Section::trimReference('1.0.1.1.0.00.1.0.10000.10'));
+        $this->assertEquals('1.0.1.1.0.00.1.0.10000.10', Section::trimReference('1.0.1.1.0.00.1.0.10000.10.00'));
+    }
+
+    /**
+     * @test
+     */
+    public function belongsToReference()
+    {
+        $this->assertTrue(self::$section->belongsToReference('2'));
+        $this->assertTrue(self::$section->belongsToReference('2.1'));
+        $this->assertTrue(self::$section->belongsToReference('2.1.1'));
+        $this->assertTrue(self::$section->belongsToReference('2.1.1.0'));
+        $this->assertTrue(self::$section->belongsToReference('2.1.1.0.0'));
+        $this->assertTrue(self::$section->belongsToReference('2.1.1.0.0.'));
+
+        $this->assertFalse(self::$section->belongsToReference('2.1.1.1'));
+        $this->assertFalse(self::$section->belongsToReference('2.1.2'));
+        $this->assertFalse(self::$section->belongsToReference('2.2.1'));
+        $this->assertFalse(self::$section->belongsToReference('3'));
+        $this->assertFalse(self::$section->belongsToReference('1.1'));
+    }
+
+    /**
+     * @test
+     */
     public function getDepth()
     {
         $this->assertEquals(2, self::$section->getDepth());

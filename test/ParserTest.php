@@ -92,16 +92,17 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function getSection($parser)
     {
-        $this->assertEquals('2.1.1', $parser->getSection('2.1.1')->getSection());
+        $this->assertEquals('2.1.1', $parser->getSection('2.1.1')->getReference());
     }
 
     /**
      * @test
+     * @expectedException Scan\Kss\Exception\UnexpectedValueException
      * @depends parseScss
      */
     public function getSectionNotFound($parser)
     {
-        $this->assertEmpty($parser->getSection('200.1.1')->getSection());
+        $this->assertEmpty($parser->getSection('200.1.1')->getReference());
     }
 
     /**
@@ -124,7 +125,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(count($expectedSections), $sections);
         $x = 0;
         foreach ($sections as $section) {
-            $this->assertEquals($expectedSections[$x], $section->getSection());
+            $this->assertEquals($expectedSections[$x], $section->getReference());
             ++$x;
         }
     }
@@ -140,7 +141,16 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(count($expectedSections), $sections);
         $x = 0;
         foreach ($sections as $section) {
-            $this->assertEquals($expectedSections[$x], $section->getSection());
+            $this->assertEquals($expectedSections[$x], $section->getReference());
+            ++$x;
+        }
+
+        $expectedSections = array('3.0.1');
+        $sections = $parser->getSectionChildren('3');
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getReference());
             ++$x;
         }
     }
@@ -151,30 +161,21 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function getSectionChildrenWithDepth($parser)
     {
-        $expectedSections = array('3.0.0');
+        $expectedSections = array();
         $sections = $parser->getSectionChildren('3', 0);
         $this->assertCount(count($expectedSections), $sections);
         $x = 0;
         foreach ($sections as $section) {
-            $this->assertEquals($expectedSections[$x], $section->getSection());
+            $this->assertEquals($expectedSections[$x], $section->getReference());
             ++$x;
         }
 
-        $expectedSections = array('3.0.0');
-        $sections = $parser->getSectionChildren('3', 1);
-        $this->assertCount(count($expectedSections), $sections);
-        $x = 0;
-        foreach ($sections as $section) {
-            $this->assertEquals($expectedSections[$x], $section->getSection());
-            ++$x;
-        }
-
-        $expectedSections = array('3.0.0', '3.0.1');
+        $expectedSections = array('3.0.1');
         $sections = $parser->getSectionChildren('3', 2);
         $this->assertCount(count($expectedSections), $sections);
         $x = 0;
         foreach ($sections as $section) {
-            $this->assertEquals($expectedSections[$x], $section->getSection());
+            $this->assertEquals($expectedSections[$x], $section->getReference());
             ++$x;
         }
     }

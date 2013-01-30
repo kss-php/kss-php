@@ -44,7 +44,7 @@ class Section
      *
      * @var string
      */
-    protected $section = null;
+    protected $reference = null;
 
     /**
      * Creates a section with the KSS Comment Block and source file
@@ -101,7 +101,7 @@ class Section
         foreach ($this->getCommentSections() as $commentSection) {
             // Anything that is not the section comment or modifiers comment
             // must be the description comment
-            if ($commentSection != $this->getSectionComment()
+            if ($commentSection != $this->getReferenceComment()
                 && $commentSection != $this->getTitleComment()
                 && $commentSection != $this->getMarkupComment()
                 && $commentSection != $this->getModifiersComment()
@@ -176,19 +176,66 @@ class Section
      * Returns the reference number for the section
      *
      * @return string
+     *
+     * @deprecated Method deprecated in v0.3.1
      */
     public function getSection()
     {
-        if ($this->section === null) {
-            $sectionComment = $this->getSectionComment();
-            $sectionComment = preg_replace('/\.$/', '', $sectionComment);
+        return $this->getReference();
+    }
 
-            if (preg_match('/Styleguide (\d\S*)/', $sectionComment, $matches)) {
-                $this->section = $matches[1];
+    /**
+     * Returns the reference number for the section
+     *
+     * @param boolean $trimmed OPTIONAL
+     *
+     * @return string
+     */
+    public function getReference($trimmed = false)
+    {
+        if ($this->reference === null) {
+            $referenceComment = $this->getReferenceComment();
+            $referenceComment = preg_replace('/\.$/', '', $referenceComment);
+
+            if (preg_match('/Styleguide (\d\S*)/', $referenceComment, $matches)) {
+                $this->reference = $matches[1];
             }
         }
 
-        return $this->section;
+        return ($trimmed && $this->reference !== null)
+            ? self::trimReference($this->reference)
+            : $this->reference;
+    }
+
+    /**
+     * Trims off all trailing zeros and periods on a reference
+     *
+     * @param string $reference
+     *
+     * @return string
+     */
+    public static function trimReference($reference)
+    {
+        if (substr($reference, -1) == '.') {
+            $reference = substr($reference, 0, -1);
+        }
+        while (preg_match('/(\.0+)$/', $reference, $matches)) {
+            $reference = substr($reference, 0, strlen($matches[1]) * -1);
+        }
+        return $reference;
+    }
+
+    /**
+     * Checks to see if a section belongs to a specified reference
+     *
+     * @param string $reference
+     *
+     * @return boolean
+     */
+    public function belongsToReference($reference)
+    {
+        $reference = self::trimReference($reference);
+        return strpos($this->getReference() . '.', $reference) === 0;
     }
 
     /**
@@ -198,7 +245,7 @@ class Section
      */
     public function getDepth()
     {
-        return self::calcDepth($this->getSection());
+        return self::calcDepth($this->getReference());
     }
 
     /**
@@ -210,11 +257,7 @@ class Section
      */
     public static function calcDepth($reference)
     {
-        // Treat a reference such as 3.0.0 as being just 3 and having a depth of 0
-        // 3.1.0 should be treated a 3.1 and have a depth of 1
-        while (substr($reference, -2) == '.0') {
-            $reference = substr($reference, 0, -2);
-        }
+        $reference = self::trimReference($reference);
         return substr_count($reference, '.');
     }
 
@@ -225,7 +268,7 @@ class Section
      */
     public function getDepthScore()
     {
-        return self::calcDepthScore($this->getSection());
+        return self::calcDepthScore($this->getReference());
     }
     /**
      * Calculates and returns the depth score for the section. Useful for sorting
@@ -235,6 +278,7 @@ class Section
      */
     public static function calcDepthScore($reference)
     {
+        $reference = self::trimReference($reference);
         $sectionParts = explode('.', $reference);
         $score = 0;
         foreach ($sectionParts as $level => $part) {
@@ -332,19 +376,19 @@ class Section
      *
      * @return string
      */
-    protected function getSectionComment()
+    protected function getReferenceComment()
     {
-        $sectionComment = null;
+        $referenceComment = null;
 
         foreach ($this->getCommentSections() as $commentSection) {
             // Identify it by the Styleguide 1.2.3. pattern
             if (preg_match('/Styleguide \d/i', $commentSection)) {
-                $sectionComment = $commentSection;
+                $referenceComment = $commentSection;
                 break;
             }
         }
 
-        return $sectionComment;
+        return $referenceComment;
     }
 
     /**

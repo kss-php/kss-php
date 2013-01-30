@@ -10,6 +10,7 @@
 namespace Scan\Kss;
 
 use Symfony\Component\Finder\Finder;
+use Scan\Kss\Exception\UnexpectedValueException;
 
 class Parser
 {
@@ -60,7 +61,7 @@ class Parser
     protected function addSection($comment, \splFileObject $file)
     {
         $section = new Section($comment, $file);
-        $this->sections[$section->getSection()] = $section;
+        $this->sections[$section->getReference(true)] = $section;
         $this->sectionsSortedByReference = false;
     }
 
@@ -71,13 +72,16 @@ class Parser
      * @param string $reference
      *
      * @return Section
+     *
+     * @throws UnexepectedValueException if reference does not exist
      */
     public function getSection($reference)
     {
-        if (array_key_exists($reference, $this->sections)) {
-            return $this->sections[$reference];
+        $reference = Section::trimReference($reference);
+        if (!array_key_exists($reference, $this->sections)) {
+            throw new UnexpectedValueException('Section with a reference of ' . $reference . ' cannot be found!');
         }
-        return new Section();
+        return $this->sections[$reference];
     }
 
     /**
@@ -131,9 +135,8 @@ class Parser
             $maxDepth = Section::calcDepth($reference) + $levelsDown;
         }
 
-        if (substr($reference, -1) != '.') {
-            $reference .= '.';
-        }
+        $reference = Section::trimReference($reference);
+        $reference .= '.';
 
         foreach ($sectionKeys as $sectionKey) {
             // Only get sections within that level. Do not get the level itself
