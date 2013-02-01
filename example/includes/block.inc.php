@@ -13,14 +13,14 @@
             <ul class="styleguide__modifiers">
                 <?php foreach ($section->getModifiers() as $modifier) { ?>
                     <li>
-                        <span class="styleguide__modifier-name <?php ($modifier->isExtender()) ? 'styleguide__modifier-name--extender' : ''; ?>">
+                        <span class="styleguide__modifier-name <?php echo ($modifier->isExtender()) ? 'styleguide__modifier-name--extender' : ''; ?>">
                             <?php echo $modifier->getName(); ?>
                         </span>
                             <?php if ($modifier->isExtender()) { ?>
                                 @extend
                                 <span class="styleguide__modifier-name"><?php echo $modifier->getExtendedClass(); ?></span>
                             <?php } ?>
-                        <?php if (!empty($modifier->getDescription)) { ?>
+                        <?php if ($modifier->getDescription()) { ?>
                             - <?php echo $modifier->getDescription(); ?>
                         <?php } ?>
                     </li>
@@ -35,7 +35,7 @@
         </div>
         <?php foreach ($section->getModifiers() as $modifier) { ?>
             <div class="styleguide__element styleguide__element--modifier <?php ($modifier->isExtender()) ? 'styleguide__element--extender' : ''; ?>">
-                <span class="styleguide__element__modifier-label <?php ($modifier->isExtender()) ? 'styleguide__element__modifier-label--extender' : ''; ?>"><?php echo  $modifier->getName(); ?></span>
+                <span class="styleguide__element__modifier-label <?php echo ($modifier->isExtender()) ? 'styleguide__element__modifier-label--extender' : ''; ?>"><?php echo  $modifier->getName(); ?></span>
                 <?php echo $modifier->getExampleHtml(); ?>
             </div>
         <?php } ?>
