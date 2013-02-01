@@ -73,6 +73,24 @@ comment;
     /**
      * @test
      */
+    public function getMarkupNormalEmpty()
+    {
+        $expected = '<div class=""></div>';
+        $this->assertEquals($expected, self::$section->getMarkupNormal());
+    }
+
+    /**
+     * @test
+     */
+    public function getMarkupNormalReplacement()
+    {
+        $expected = '<div class="{class}"></div>';
+        $this->assertEquals($expected, self::$section->getMarkupNormal('{class}'));
+    }
+
+    /**
+     * @test
+     */
     public function getMarkupMultiLine()
     {
         $commentText = <<<comment
@@ -134,6 +152,29 @@ comment;
     public function getModifiers()
     {
         $this->assertCount(5, self::$section->getModifiers());
+    }
+
+    /**
+     * @test
+     */
+    public function getModifiersDescriptionContainsDelimiter()
+    {
+        $commentText = <<<comment
+# Form Button
+
+Your standard form button.
+
+.smaller - A smaller button - really small
+
+Styleguide 2.1.1.
+comment;
+
+        $testSection = new Section($commentText);
+        $modifiers = $testSection->getModifiers();
+        $description = $modifiers[0]->getDescription();
+        $expected = 'A smaller button - really small';
+
+        $this->assertEquals($expected, $description);
     }
 
     /**

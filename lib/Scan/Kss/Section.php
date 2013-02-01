@@ -130,6 +130,17 @@ class Section
     }
 
     /**
+     * Returns the markup for the normal element (without modifierclass)
+     *
+     * @param string $replacement Replacement for $modifierClass variable
+     * @return void
+     */
+    public function getMarkupNormal($replacement = '')
+    {
+        return str_replace('$modifierClass', $replacement, $this->getMarkup());
+    }
+
+    /**
      * Returns the modifiers used in the section
      *
      * @return array
@@ -154,11 +165,14 @@ class Section
                     $modifier->setDescription($modifier->getDescription() + trim($line));
                 } else {
                     $lineParts = explode(' - ', $line);
+
+                    $name = trim(array_shift($lineParts));
+
                     $description = '';
-                    if (array_key_exists(1, $lineParts)) {
-                        $description = trim($lineParts[1]);
+                    if (!empty($lineParts)) {
+                        $description = trim(implode(' - ', $lineParts));
                     }
-                    $modifier = new Modifier(trim($lineParts[0]), $description);
+                    $modifier = new Modifier($name, $description);
 
                     // If the CSS has a markup, pass it to the modifier for the example HTML
                     if ($markup = $this->getMarkup()) {

@@ -143,4 +143,51 @@ class ModifierTest extends \PHPUnit_Framework_TestCase
         $expected = '<span class="extenderModifier ">test2</span>';
         $this->assertEquals($expected, $html);
     }
+
+    /**
+     * @test
+     */
+    public function getExtenderExampleHtmlWithSimilarElementName()
+    {
+        $name = '.extenderModifier @extend .button';
+        $description = 'This is a test modifier that extends from .button';
+        $extenderModifier = new \Scan\Kss\Modifier($name, $description);
+
+        $exampleHtml = '<button class="modifier button $modifierClass">test3</button>';
+        $html = $extenderModifier->getExampleHtml($exampleHtml);
+        $expected = '<button class="modifier extenderModifier ">test3</button>';
+        $this->assertEquals($expected, $html);
+    }
+
+    /**
+     * @test
+     */
+    public function getExtenderExampleHtmlWithSimilarElementNameAtStartOfAttribute()
+    {
+        $name = '.extenderModifier @extend .button';
+        $description = 'This is a test modifier that extends from .button';
+        $extenderModifier = new \Scan\Kss\Modifier($name, $description);
+
+        // Note that this also preserves the similar class name
+        // 'button-success'
+        $exampleHtml = '<button class="button button-success $modifierClass">test3</button>';
+        $html = $extenderModifier->getExampleHtml($exampleHtml);
+        $expected = '<button class="extenderModifier button-success ">test3</button>';
+        $this->assertEquals($expected, $html);
+    }
+
+    /**
+     * @test
+     */
+    public function getExtenderExampleHtmlWithSimilarElementNameAtEndOfAttribute()
+    {
+        $name = '.extenderModifier @extend .button';
+        $description = 'This is a test modifier that extends from .button';
+        $extenderModifier = new \Scan\Kss\Modifier($name, $description);
+
+        $exampleHtml = '<button class="button-success $modifierClass button">test3</button>';
+        $html = $extenderModifier->getExampleHtml($exampleHtml);
+        $expected = '<button class="button-success  extenderModifier">test3</button>';
+        $this->assertEquals($expected, $html);
+    }
 }
