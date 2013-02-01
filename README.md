@@ -51,7 +51,7 @@ a.button.stars--disabled {
 
 This repository includes a php library suitable for parsing SASS, SCSS, and CSS
 documented with KSS guidelines. To use the library, include it in your project as
-a gem from <https://rubygems.org/gems/kss>. Then, create a parser and explore your KSS.
+a composer dependency (see below). Then, create a parser and explore your KSS.
 
 ```php
 <?php
