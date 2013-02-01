@@ -53,8 +53,7 @@ button.smaller {
     font-size: 11px;
     padding: 4px 7px;
 }
-button:hover
-{
+button:hover {
     color: #337797;
     background: #f0f7fa;
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='$start', endColorstr='$end');
@@ -63,8 +62,7 @@ button:hover
     border-color: #cbe3ee;
     border-bottom-color: #97c7dd;
 }
-button:disabled
-{
+button:disabled {
     opacity: 0.5;
 }
 
@@ -73,21 +71,21 @@ button:disabled
 
 A button suitable for giving stars to someone.
 
-Markup: <a class="button star $modifierClass" href="#">Rate</a>
+Markup: <a class="button stars $modifierClass" href="#">Rate</a>
 
-.star--given - A highlight indicating you've already given a star.
-.star--disabled   - Dims the button to indicate it cannot be used.
+.stars--given - A highlight indicating you've already given a star.
+.stars--disabled   - Dims the button to indicate it cannot be used.
 
 Styleguide 1.2
 */
-a.button.star{
-    display:inline-block;
-    font-size:10px;
+a.button.stars {
+    display: inline-block;
+    font-size: 10px;
 }
-a.button.star--given{
-    color:#ae7e00;
+a.button.stars--given {
+    color: #ae7e00;
 }
 
-a.button.star--disabled{
-    opacity:0.5;
+a.button.stars--disabled {
+    opacity: 0.5;
 }

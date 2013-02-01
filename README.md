@@ -24,19 +24,19 @@ A button suitable for giving stars to someone.
 Markup: <a class="button star $modifierClass">Button</a>
 
 :hover             - Subtle hover highlight.
-.stars-given       - A highlight indicating you've already given a star.
-.stars-given:hover - Subtle hover highlight on top of stars-given styling.
-.disabled          - Dims the button to indicate it cannot be used.
+.stars--given       - A highlight indicating you've already given a star.
+.stars--given:hover - Subtle hover highlight on top of stars-given styling.
+.stars--disabled          - Dims the button to indicate it cannot be used.
 
 Styleguide 2.1.3.
 */
 a.button.star{
   ...
 }
-a.button.star.stars-given{
+a.button.stars--given{
   ...
 }
-a.button.star.disabled{
+a.button.stars--disabled{
   ...
 }
 ```
