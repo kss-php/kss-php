@@ -241,6 +241,18 @@ comment;
         $this->assertFalse(self::$section->belongsToReference('2.2.1'));
         $this->assertFalse(self::$section->belongsToReference('3'));
         $this->assertFalse(self::$section->belongsToReference('1.1'));
+
+        $commentText = <<<comment
+# Section test
+
+Styleguide 20.
+comment;
+
+        $section20 = new Section($commentText);
+
+        $this->assertFalse($section20->belongsToReference('2'));
+        $this->assertTrue($section20->belongsToReference('20'));
+        $this->assertFalse($section20->belongsToReference('200'));
     }
 
     /**

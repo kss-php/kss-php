@@ -249,7 +249,7 @@ class Section
     public function belongsToReference($reference)
     {
         $reference = self::trimReference($reference);
-        return strpos($this->getReference() . '.', $reference) === 0;
+        return strpos($this->getReference() . '.', $reference . '.') === 0;
     }
 
     /**
