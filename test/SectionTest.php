@@ -19,6 +19,10 @@ And another line describing the button.
 
 Markup: <div class="\$modifierClass"></div>
 
+Deprecated: Styling for legacy wikis. We'll drop support for these wikis on July 13, 2007.
+
+Experimental: An alternative signup button styling used in AB Test #195.
+
 :hover - Highlights when hovering.
 :disabled - Dims the button when disabled.
 .primary - Indicates button is the primary action.
@@ -144,6 +148,142 @@ comment;
 
         $testSection = new Section($commentText);
         $this->assertEmpty($testSection->getMarkup());
+    }
+
+    /**
+     * @test
+     */
+    public function getDeprecated()
+    {
+        $expected = "Styling for legacy wikis. We'll drop support for these wikis on July 13, 2007.";
+        $this->assertEquals($expected, self::$section->getDeprecated());
+    }
+
+    /**
+     * @test
+     */
+    public function getDeprecatedMultiLine()
+    {
+        $commentText = <<<comment
+# Form Button
+
+Your standard form button.
+
+And another line describing the button.
+
+Deprecated:
+Styling for legacy wikis. We'll drop support for these wikis on
+July 13, 2007.
+
+:hover - Highlights when hovering.
+:disabled - Dims the button when disabled.
+.primary - Indicates button is the primary action.
+.smaller - A smaller button
+.altFormButton @extends .formButton - An extension of .formButton
+
+Styleguide 2.1.1.
+comment;
+
+        $expected = <<<comment
+Styling for legacy wikis. We'll drop support for these wikis on
+July 13, 2007.
+comment;
+
+        $testSection = new Section($commentText);
+        $this->assertEquals($expected, $testSection->getDeprecated());
+    }
+
+    /**
+     * @test
+     */
+    public function getDeprecatedNull()
+    {
+        $commentText = <<<comment
+# Form Button
+
+Your standard form button.
+
+And another line describing the button.
+
+:hover - Highlights when hovering.
+:disabled - Dims the button when disabled.
+.primary - Indicates button is the primary action.
+.smaller - A smaller button
+.altFormButton @extends .formButton - An extension of .formButton
+
+Styleguide 2.1.1.
+comment;
+
+        $testSection = new Section($commentText);
+        $this->assertEmpty($testSection->getDeprecated());
+    }
+
+    /**
+     * @test
+     */
+    public function getExperimental()
+    {
+        $expected = 'An alternative signup button styling used in AB Test #195.';
+        $this->assertEquals($expected, self::$section->getExperimental());
+    }
+
+    /**
+     * @test
+     */
+    public function getExperimentalMultiLine()
+    {
+        $commentText = <<<comment
+# Form Button
+
+Your standard form button.
+
+And another line describing the button.
+
+Experimental:
+An alternative signup button styling used in
+AB Test #195.
+
+:hover - Highlights when hovering.
+:disabled - Dims the button when disabled.
+.primary - Indicates button is the primary action.
+.smaller - A smaller button
+.altFormButton @extends .formButton - An extension of .formButton
+
+Styleguide 2.1.1.
+comment;
+
+        $expected = <<<comment
+An alternative signup button styling used in
+AB Test #195.
+comment;
+
+        $testSection = new Section($commentText);
+        $this->assertEquals($expected, $testSection->getExperimental());
+    }
+
+    /**
+     * @test
+     */
+    public function getExperimentalNull()
+    {
+        $commentText = <<<comment
+# Form Button
+
+Your standard form button.
+
+And another line describing the button.
+
+:hover - Highlights when hovering.
+:disabled - Dims the button when disabled.
+.primary - Indicates button is the primary action.
+.smaller - A smaller button
+.altFormButton @extends .formButton - An extension of .formButton
+
+Styleguide 2.1.1.
+comment;
+
+        $testSection = new Section($commentText);
+        $this->assertEmpty($testSection->getExperimental());
     }
 
     /**

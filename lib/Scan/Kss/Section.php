@@ -40,6 +40,20 @@ class Section
     protected $markup = null;
 
     /**
+     * The deprecation notice in the KSS Block
+     *
+     * @var string
+     */
+    protected $deprecated = null;
+
+    /**
+     * The experimental notice in the KSS Block
+     *
+     * @var string
+     */
+    protected $experimental = null;
+
+    /**
      * The section reference identifier
      *
      * @var string
@@ -104,6 +118,8 @@ class Section
             if ($commentSection != $this->getReferenceComment()
                 && $commentSection != $this->getTitleComment()
                 && $commentSection != $this->getMarkupComment()
+                && $commentSection != $this->getDeprecatedComment()
+                && $commentSection != $this->getExperimentalComment()
                 && $commentSection != $this->getModifiersComment()
             ) {
                 $descriptionSections[] = $commentSection;
@@ -138,6 +154,38 @@ class Section
     public function getMarkupNormal($replacement = '')
     {
         return str_replace('$modifierClass', $replacement, $this->getMarkup());
+    }
+
+    /**
+     * Returns the deprecation notice defined in the section
+     *
+     * @return string
+     */
+    public function getDeprecated()
+    {
+        if ($this->deprecated === null) {
+            if ($deprecatedComment = $this->getDeprecatedComment()) {
+                $this->deprecated = trim(preg_replace('/^\s*Deprecated:/i', '', $deprecatedComment));
+            }
+        }
+
+        return $this->deprecated;
+    }
+
+    /**
+     * Returns the experimental notice defined in the section
+     *
+     * @return string
+     */
+    public function getExperimental()
+    {
+        if ($this->experimental === null) {
+            if ($experimentalComment = $this->getExperimentalComment()) {
+                $this->experimental = trim(preg_replace('/^\s*Experimental:/i', '', $experimentalComment));
+            }
+        }
+
+        return $this->experimental;
     }
 
     /**
@@ -383,6 +431,48 @@ class Section
         }
 
         return $markupComment;
+    }
+
+    /**
+     * Returns the part of the KSS Comment Block that contains the deprecated
+     * notice
+     *
+     * @return string
+     */
+    protected function getDeprecatedComment()
+    {
+        $deprecatedComment = null;
+
+        foreach ($this->getCommentSections() as $commentSection) {
+            // Identify the deprecation notice by the Deprecated: marker
+            if (preg_match('/^\s*Deprecated:/i', $commentSection)) {
+                $deprecatedComment = $commentSection;
+                break;
+            }
+        }
+
+        return $deprecatedComment;
+    }
+
+    /**
+     * Returns the part of the KSS Comment Block that contains the experimental
+     * notice
+     *
+     * @return string
+     */
+    protected function getExperimentalComment()
+    {
+        $experimentalComment = null;
+
+        foreach ($this->getCommentSections() as $commentSection) {
+            // Identify the experimental notice by the Experimental: marker
+            if (preg_match('/^\s*Experimental:/i', $commentSection)) {
+                $experimentalComment = $commentSection;
+                break;
+            }
+        }
+
+        return $experimentalComment;
     }
 
     /**
