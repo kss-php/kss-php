@@ -52,6 +52,13 @@ class Section
      * @var string
      */
     protected $experimental = null;
+    
+    /**
+     * The compatibility informations
+     *
+     * @var string
+     */
+    protected $compatibility = null;
 
     /**
      * The section reference identifier
@@ -120,6 +127,7 @@ class Section
                 && $commentSection != $this->getMarkupComment()
                 && $commentSection != $this->getDeprecatedComment()
                 && $commentSection != $this->getExperimentalComment()
+                && $commentSection != $this->getCompatibilityComment()
                 && $commentSection != $this->getModifiersComment()
             ) {
                 $descriptionSections[] = $commentSection;
@@ -186,6 +194,22 @@ class Section
         }
 
         return $this->experimental;
+    }
+    
+    /**
+     * Returns the compatibility notice defined in the section
+     *
+     * @return string
+     */
+    public function getCompatibility()
+    {
+        if ($this->compatibility === null) {
+            if ($compatibilityComment = $this->getCompatibilityComment()) {
+                $this->compatibility = trim(preg_replace('/^\s*Compatibility:/i', '', $compatibilityComment));
+            }
+        }
+
+        return $this->compatibility;
     }
 
     /**
@@ -259,7 +283,7 @@ class Section
             $referenceComment = $this->getReferenceComment();
             $referenceComment = preg_replace('/\.$/', '', $referenceComment);
 
-            if (preg_match('/Styleguide (\d\S*)/', $referenceComment, $matches)) {
+            if (preg_match('/Styleguide (\w\S*)/', $referenceComment, $matches)) {
                 $this->reference = $matches[1];
             }
         }
@@ -474,6 +498,27 @@ class Section
 
         return $experimentalComment;
     }
+    
+    /**
+     * Returns the part of the KSS Comment Block that contains the compatibility
+     * notice
+     *
+     * @return string
+     */
+    protected function getCompatibilityComment()
+    {
+        $compatibilityComment = null;
+
+        foreach ($this->getCommentSections() as $commentSection) {
+            // Identify the compatibility notice by the Compatibility: marker
+            if (preg_match('/^\s*Compatibility:/i', $commentSection)) {
+                $compatibilityComment = $commentSection;
+                break;
+            }
+        }
+
+        return $compatibilityComment;
+    }
 
     /**
      * Gets the part of the KSS Comment Block that contains the section reference
@@ -486,7 +531,7 @@ class Section
 
         foreach ($this->getCommentSections() as $commentSection) {
             // Identify it by the Styleguide 1.2.3. pattern
-            if (preg_match('/Styleguide \d/i', $commentSection)) {
+            if (preg_match('/Styleguide \w/i', $commentSection)) {
                 $referenceComment = $commentSection;
                 break;
             }
