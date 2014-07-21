@@ -22,8 +22,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "Scan\\Kss": "lib/"
+        "psr-4": {
+            "Scan\\Kss\\": "lib/"
         }
     }
 }

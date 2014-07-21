@@ -2,8 +2,8 @@
 
 ## Guidelines
 
-All code modifications must following [PSR-0][], [PSR-1][], and [PSR-2][] as
-outlined on the [PHP Framework Interop Group][php-fig].
+All code modifications must follow [PSR-1][], [PSR-2][], and [PSR-4][] as outlined
+on the [PHP Framework Interop Group][php-fig].
 
 An .editorconfig file is included to help setup your environment if your IDE supports
 [EditorConfig][].
@@ -33,9 +33,9 @@ An .editorconfig file is included to help setup your environment if your IDE sup
 * Make sure you have added the necessary tests for your changes.
 * Run all the tests to assure nothing else was accidentally broken.
 
-[PSR-0]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
+[PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 [php-fig]: http://www.php-fig.org
 [EditorConfig]: http://editorconfig.org/
 
