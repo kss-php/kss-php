@@ -151,7 +151,7 @@ comment;
         $testSection = new Section($commentText);
         $this->assertEmpty($testSection->getMarkup());
     }
-    
+
     /**
      * @test
      */
@@ -160,11 +160,12 @@ comment;
         $expected = "IE6+, Firefox 2+, Safari 4+.";
         $this->assertEquals($expected, self::$section->getCompatibility());
     }
-    
+
     /**
      * @test
      */
-    public function getCompatibilityMultiline(){
+    public function getCompatibilityMultiline()
+    {
         $commentText = <<<comment
 # Form Button
 
@@ -195,11 +196,12 @@ comment;
         $testSection = new Section($commentText);
         $this->assertEquals($expected, $testSection->getCompatibility());
     }
-    
+
     /**
      * @test
      */
-    public function getCompatibilityNull(){
+    public function getCompatibilityNull()
+    {
          $commentText = <<<comment
 # Form Button
 

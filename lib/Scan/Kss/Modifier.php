@@ -217,9 +217,9 @@ class Modifier
         if ($this->isExtender()) {
             $html = str_replace('$modifierClass', '', $html);
 
-            // Use a positive lookbehind and lookahead to ensure we don't 
+            // Use a positive lookbehind and lookahead to ensure we don't
             // replace anything more than just the targeted class name
-            // for example an element name that is the same as the extended 
+            // for example an element name that is the same as the extended
             // class name (e.g. button)
             $pattern = sprintf('/(?<="| )%s(?="| )/', $this->getExtendedClassName());
             $html = preg_replace(

@@ -52,7 +52,7 @@ class Section
      * @var string
      */
     protected $experimental = null;
-    
+
     /**
      * The compatibility informations
      *
@@ -195,7 +195,7 @@ class Section
 
         return $this->experimental;
     }
-    
+
     /**
      * Returns the compatibility notice defined in the section
      *
@@ -283,7 +283,7 @@ class Section
             $referenceComment = $this->getReferenceComment();
             $referenceComment = preg_replace('/\.$/', '', $referenceComment);
 
-            if (preg_match('/Styleguide (\w\S*)/', $referenceComment, $matches)) {
+            if (preg_match('/Styleguide (\d\S*)/', $referenceComment, $matches)) {
                 $this->reference = $matches[1];
             }
         }
@@ -356,6 +356,7 @@ class Section
     {
         return self::calcDepthScore($this->getReference());
     }
+
     /**
      * Calculates and returns the depth score for the section. Useful for sorting
      * sections correctly by their section reference numbers
@@ -498,7 +499,7 @@ class Section
 
         return $experimentalComment;
     }
-    
+
     /**
      * Returns the part of the KSS Comment Block that contains the compatibility
      * notice
@@ -531,7 +532,7 @@ class Section
 
         foreach ($this->getCommentSections() as $commentSection) {
             // Identify it by the Styleguide 1.2.3. pattern
-            if (preg_match('/Styleguide \w/i', $commentSection)) {
+            if (preg_match('/Styleguide \d/i', $commentSection)) {
                 $referenceComment = $commentSection;
                 break;
             }
