@@ -26,6 +26,23 @@
                 <?php } ?>
             </ul>
         <?php } ?>
+
+        <?php
+            if (count($section->getParameters()) > 0) {
+        ?>
+            <ul class="styleguide__parameters">
+                <?php foreach ($section->getParameters() as $parameter) { ?>
+                    <li>
+                        <span class="styleguide__parameter-name">
+                            <?php echo $parameter->getName(); ?>
+                        </span>
+                        <?php if ($parameter->getDescription()) { ?>
+                            - <?php echo $parameter->getDescription(); ?>
+                        <?php } ?>
+                    </li>
+                <?php } ?>
+            </ul>
+        <?php } ?>
     </div>
 
     <div class="styleguide__elements">

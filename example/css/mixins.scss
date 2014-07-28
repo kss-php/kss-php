@@ -1,0 +1,14 @@
+// Styleguide Mixins
+
+// Creates a linear gradient background, from top to bottom.
+//
+// $start - The color hex at the top.
+// $end   - The color hex at the bottom.
+//
+// Compatible in IE6+, Firefox 2+, Safari 4+.
+//
+// Styleguide Mixins - Gradient
+
+@mixin gradient($start, $end){
+    background-image: linear-gradient(to bottom, $start, $end);
+}
