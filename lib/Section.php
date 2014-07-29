@@ -404,6 +404,21 @@ class Section
     }
 
     /**
+     * Function to help sort sections either by their depth score if numeric or
+     * alphabetically if non-numeric.
+     *
+     * @param Section $a
+     * @param Section $b
+     *
+     * @return int
+     */
+    public static function alphaDepthScoreSort(Section $a, Section $b)
+    {
+        // @TODO: Implement function
+        return 0;
+    }
+
+    /**
      * Returns the comment block used when creating the section as an array of
      * paragraphs within the comment block
      *
