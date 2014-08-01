@@ -1,6 +1,5 @@
 <div class="styleguide" id="r<?php echo $section->getReference(); ?>">
     <h3 class="styleguide__header">
-        <span class="styleguide__reference"><?php echo $section->getReference(); ?></span>
         <span class="styleguide__title"><?php echo $section->getTitle(); ?></span>
         <span class="styleguide__filename"><?php echo $section->getFilename(); ?></span>
     </h3>

@@ -125,6 +125,7 @@ class Parser
      */
     public function getSectionChildren($reference, $levelsDown = null)
     {
+        $reference = preg_replace('/\s*-\s*/', '.', $reference);
         $this->sortSections();
 
         $sectionKeys = array_keys($this->sections);
@@ -139,9 +140,10 @@ class Parser
         $reference .= '.';
 
         foreach ($sectionKeys as $sectionKey) {
+            $testSectionKey = preg_replace('/\s*-\s*/', '.', $sectionKey);
             // Only get sections within that level. Do not get the level itself
-            if (strpos($sectionKey . '.', $reference) === 0
-                && $sectionKey . '.' != $reference
+            if (strpos($testSectionKey . '.', $reference) === 0
+                && $testSectionKey . '.' != $reference
             ) {
                 $section = $this->sections[$sectionKey];
                 if ($maxDepth !== null && $section->getDepth() > $maxDepth) {
@@ -165,7 +167,7 @@ class Parser
             return;
         }
 
-        uasort($this->sections, '\Scan\Kss\Section::depthScoreSort');
+        uasort($this->sections, '\Scan\Kss\Section::alphaDepthScoreSort');
         $this->sectionsSortedByReference = true;
     }
 
@@ -191,6 +193,6 @@ class Parser
     {
         $commentLines = explode("\n\n", $comment);
         $lastLine = end($commentLines);
-        return (bool) preg_match('/Styleguide \d/i', $lastLine);
+        return (bool) preg_match('/Styleguide \w/i', $lastLine);
     }
 }

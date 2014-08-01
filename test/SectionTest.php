@@ -57,6 +57,44 @@ comment;
     /**
      * @test
      */
+    public function getTitleFromReferenceWord()
+    {
+        $section = new Section('// Styleguide Forms.Checkboxes');
+        $this->assertEquals('Checkboxes', $section->getTitle());
+
+        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $this->assertEquals('Special Checkboxes', $section->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function getTitleFromReferenceWordWithTitle()
+    {
+        $commentText = <<<comment
+# Form Checkboxes
+
+Your standard form checkboxes.
+
+Styleguide Forms.Checkboxes
+comment;
+        $section = new Section($commentText);
+        $this->assertEquals('Form Checkboxes', $section->getTitle());
+
+        $commentText = <<<comment
+# Form Special Checkboxes
+
+Your standard form checkboxes.
+
+Styleguide Forms - Special Checkboxes
+comment;
+        $section = new Section($commentText);
+        $this->assertEquals('Form Special Checkboxes', $section->getTitle());
+    }
+
+    /**
+     * @test
+     */
     public function getDescription()
     {
         $expected = <<<comment
@@ -400,6 +438,18 @@ comment;
     /**
      * @test
      */
+    public function getSectionWords()
+    {
+        $section = new Section('// Styleguide Forms.Checkboxes');
+        $this->assertEquals('Forms.Checkboxes', $section->getSection());
+
+        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $this->assertEquals('Forms - Special Checkboxes', $section->getSection());
+    }
+
+    /**
+     * @test
+     */
     public function getReference()
     {
         $this->assertEquals('2.1.1', self::$section->getReference());
@@ -411,12 +461,98 @@ comment;
     /**
      * @test
      */
+    public function getReferenceWords()
+    {
+        $section = new Section('// Styleguide Forms.Checkboxes');
+        $this->assertEquals('Forms.Checkboxes', $section->getReference());
+
+        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $this->assertEquals('Forms - Special Checkboxes', $section->getReference());
+    }
+
+    /**
+     * @test
+     */
+    public function isReferenceNumeric()
+    {
+        $this->assertTrue(Section::isReferenceNumeric('1'));
+        $this->assertTrue(Section::isReferenceNumeric('1.1'));
+        $this->assertTrue(Section::isReferenceNumeric('1.0.0.1'));
+        $this->assertTrue(Section::isReferenceNumeric('1.0.0.1.'));
+        $this->assertFalse(Section::isReferenceNumeric('Forms'));
+        $this->assertFalse(Section::isReferenceNumeric('Forms.Checkboxes'));
+        $this->assertFalse(Section::isReferenceNumeric('Forms - Special Checkboxes'));
+    }
+
+    /**
+     * @test
+     */
+    public function getReferenceParts()
+    {
+        $section = new Section('// Styleguide 1');
+        $this->assertEquals(
+            array(1),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide 1.1');
+        $this->assertEquals(
+            array(1,1),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide 1.0.0.1');
+        $this->assertEquals(
+            array(1,0,0,1),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide 1.0.0.1.');
+        $this->assertEquals(
+            array(1,0,0,1),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide Forms');
+        $this->assertEquals(
+            array('Forms'),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide Forms.Checkboxes');
+        $this->assertEquals(
+            array('Forms', 'Checkboxes'),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $this->assertEquals(
+            array('Forms', 'Special Checkboxes'),
+            $section->getReferenceParts()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function getReferenceTrimmed()
     {
         $this->assertEquals('2.1.1', self::$section->getReference(true));
 
         $section = new Section('// Styleguide 3.0.0');
         $this->assertEquals('3', $section->getReference(true));
+    }
+
+    /**
+     * @test
+     */
+    public function getReferenceTrimmedWords()
+    {
+        $section = new Section('// Styleguide Forms.Checkboxes.');
+        $this->assertEquals('Forms.Checkboxes', $section->getReference(true));
+
+        $section = new Section('// Styleguide Forms - Special Checkboxes -');
+        $this->assertEquals('Forms - Special Checkboxes', $section->getReference(true));
     }
 
     /**
@@ -434,6 +570,17 @@ comment;
         $this->assertEquals('1.1.1', Section::trimReference('1.1.1.0.00.000.0000'));
         $this->assertEquals('1.0.1.1.0.00.1.0.10000.10', Section::trimReference('1.0.1.1.0.00.1.0.10000.10'));
         $this->assertEquals('1.0.1.1.0.00.1.0.10000.10', Section::trimReference('1.0.1.1.0.00.1.0.10000.10.00'));
+    }
+
+    /**
+     * @test
+     */
+    public function trimReferenceWords()
+    {
+        $this->assertEquals('Forms.Checkboxes', Section::trimReference('Forms.Checkboxes'));
+        $this->assertEquals('Forms.Checkboxes', Section::trimReference('Forms.Checkboxes.'));
+        $this->assertEquals('Forms - Special Checkboxes', Section::trimReference('Forms - Special Checkboxes'));
+        $this->assertEquals('Forms - Special Checkboxes', Section::trimReference('Forms - Special Checkboxes -'));
     }
 
     /**
@@ -470,9 +617,59 @@ comment;
     /**
      * @test
      */
+    public function belongsToReferenceWords()
+    {
+        $section = new Section('// Styleguide Forms.Buttons.Actions.');
+        $this->assertTrue($section->belongsToReference('Forms'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons.Actions'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons.Actions.'));
+
+        $this->assertFalse($section->belongsToReference('Tables'));
+        $this->assertFalse($section->belongsToReference('Forms.Checkboxes'));
+        $this->assertFalse($section->belongsToReference('Forms.Buttons.Links'));
+        $this->assertFalse($section->belongsToReference('Forms.Buttons.Actions.Special'));
+    }
+
+    /**
+     * @test
+     */
+    public function belongsToReferenceWordsDashed()
+    {
+        $section = new Section('// Styleguide Forms - Buttons - Special Actions -');
+        $this->assertTrue($section->belongsToReference('Forms'));
+        $this->assertTrue($section->belongsToReference('Forms - Buttons'));
+        $this->assertTrue($section->belongsToReference('Forms-Buttons'));
+        $this->assertTrue($section->belongsToReference('Forms - Buttons - Special Actions'));
+        $this->assertTrue($section->belongsToReference('Forms - Buttons - Special Actions -'));
+        $this->assertTrue($section->belongsToReference('Forms-Buttons-Special Actions'));
+        $this->assertTrue($section->belongsToReference('Forms-Buttons-Special Actions-'));
+        $this->assertTrue($section->belongsToReference('Forms- Buttons - Special Actions-'));
+
+        $this->assertFalse($section->belongsToReference('Tables'));
+        $this->assertFalse($section->belongsToReference('Forms - Checkboxes'));
+        $this->assertFalse($section->belongsToReference('Forms - Buttons - Links'));
+        $this->assertFalse($section->belongsToReference('Forms - Buttons - Special Actions - Super Special'));
+    }
+
+    /**
+     * @test
+     */
     public function getDepth()
     {
         $this->assertEquals(2, self::$section->getDepth());
+    }
+
+    /**
+     * @test
+     */
+    public function getDepthWords()
+    {
+        $section = new Section('// Styleguide Forms.Buttons.Actions.');
+        $this->assertEquals(2, $section->getDepth());
+
+        $section = new Section('// Styleguide Forms - Buttons - Actions -');
+        $this->assertEquals(2, $section->getDepth());
     }
 
     /**
@@ -492,9 +689,32 @@ comment;
     /**
      * @test
      */
+    public function calcDepthWords()
+    {
+        $this->assertEquals(0, Section::calcDepth('Forms'));
+        $this->assertEquals(0, Section::calcDepth('Forms.'));
+        $this->assertEquals(0, Section::calcDepth('Forms -'));
+        $this->assertEquals(1, Section::calcDepth('Forms.Buttons'));
+        $this->assertEquals(1, Section::calcDepth('Forms - Buttons'));
+        $this->assertEquals(2, Section::calcDepth('Forms.Buttons.Actions'));
+        $this->assertEquals(2, Section::calcDepth('Forms - Buttons - Special Actions'));
+    }
+
+    /**
+     * @test
+     */
     public function getDepthScore()
     {
         $this->assertEquals(2.11, self::$section->getDepthScore());
+    }
+
+    /**
+     * @test
+     */
+    public function getDepthScoreWords()
+    {
+        $section = new Section('//Styleguide Forms.Checkboxes');
+        $this->assertEquals(null, $section->getDepthScore());
     }
 
     /**
@@ -509,6 +729,17 @@ comment;
         $this->assertEquals(1.11, Section::calcDepthScore('1.1.1'));
         $this->assertEquals(1.111, Section::calcDepthScore('1.1.1.1'));
         $this->assertEquals(1.101, Section::calcDepthScore('1.1.0.1'));
+    }
+
+    /**
+     * @test
+     */
+    public function calcDepthScoreWords()
+    {
+        $this->assertEquals(null, Section::calcDepthScore('1.Forms'));
+        $this->assertEquals(null, Section::calcDepthScore('Forms'));
+        $this->assertEquals(null, Section::calcDepthScore('Forms.Checkboxes'));
+        $this->assertEquals(null, Section::calcDepthScore('Forms - Special Checkboxes'));
     }
 
     /**
@@ -544,6 +775,118 @@ comment;
     /**
      * @test
      */
+    public function depthSortWords()
+    {
+        $sections = array(
+            'Tables' => new Section('// Styleguide Tables'),
+            'Forms.Buttons.Actions' => new Section('// Styleguide Forms.Buttons.Actions'),
+            'Forms.Checkboxes' => new Section('// Styleguide Forms.Checkboxes'),
+            'Menus.Dropdown' => new Section('// Styleguide Menus.Dropdown'),
+            'Menus' => new Section('// Styleguide Menus'),
+            'Forms.' => new Section('// Styleguide Forms.'),
+            'Forms.Buttons' => new Section('// Styleguide Forms.Buttons'),
+            'Tables.Body.Alt' => new Section('// Styleguide Tables.Body.Alt'),
+        );
+
+        uasort($sections, '\Scan\Kss\Section::depthSort');
+
+        $keys = array_keys($sections);
+        $expectedKeys = array(
+            'Forms.',
+            'Menus',
+            'Tables',
+            'Forms.Buttons',
+            'Forms.Checkboxes',
+            'Menus.Dropdown',
+            'Forms.Buttons.Actions',
+            'Tables.Body.Alt'
+        );
+        $this->assertEquals($expectedKeys, $keys);
+    }
+
+    /**
+     * @test
+     */
+    public function depthSortWordsDashed()
+    {
+        $sections = array(
+            'Tables' => new Section('// Styleguide Tables'),
+            'Forms - Buttons - Actions' => new Section('// Styleguide Forms - Buttons -Actions'),
+            'Forms - Checkboxes' => new Section('// Styleguide Forms - Checkboxes'),
+            'Menus - Dropdown' => new Section('// Styleguide Menus - Dropdown'),
+            'Menus' => new Section('// Styleguide Menus'),
+            'Forms -' => new Section('// Styleguide Forms -'),
+            'Forms - Buttons' => new Section('// Styleguide Forms - Buttons'),
+            'Tables - Body - Alt' => new Section('// Styleguide Tables - Body - Alt'),
+        );
+
+        uasort($sections, '\Scan\Kss\Section::depthSort');
+
+        $keys = array_keys($sections);
+        $expectedKeys = array(
+            'Forms -',
+            'Menus',
+            'Tables',
+            'Forms - Buttons',
+            'Forms - Checkboxes',
+            'Menus - Dropdown',
+            'Forms - Buttons - Actions',
+            'Tables - Body - Alt'
+        );
+        $this->assertEquals($expectedKeys, $keys);
+    }
+
+    /**
+     * @test
+     */
+    public function depthSortMixed()
+    {
+        $sections = array(
+            '2' => new Section('// Styleguide 2'),
+            '3.2.1' => new Section('// Styleguide 3.2.1'),
+            '3.1' => new Section('// Styleguide 3.1'),
+            '1.2' => new Section('// Styleguide 1.2'),
+            '1' => new Section('// Styleguide 1'),
+            '3.0.0' => new Section('// Styleguide 3.0.0'),
+            '2.1.2' => new Section('// Styleguide 2.1.2'),
+            'Tables' => new Section('// Styleguide Tables'),
+            'Forms.Buttons.Actions' => new Section('// Styleguide Forms.Buttons.Actions'),
+            'Forms - Checkboxes' => new Section('// Styleguide Forms - Checkboxes'),
+            'Menus.Dropdown' => new Section('// Styleguide Menus.Dropdown'),
+            'Menus' => new Section('// Styleguide Menus'),
+            'Forms-' => new Section('// Styleguide Forms.'),
+            'Forms.Buttons' => new Section('// Styleguide Forms.Buttons'),
+            'Tables - Body - Alt' => new Section('// Styleguide Tables - Body - Alt'),
+            'Tables.Body.Main' => new Section('// Styleguide Tables.Body.Main'),
+        );
+
+        uasort($sections, '\Scan\Kss\Section::depthSort');
+
+        $keys = array_keys($sections);
+        $expectedKeys = array(
+            '1',
+            '2',
+            '3.0.0',
+            'Forms-',
+            'Menus',
+            'Tables',
+            '1.2',
+            '3.1',
+            'Forms.Buttons',
+            'Forms - Checkboxes',
+            'Menus.Dropdown',
+            '2.1.2',
+            '3.2.1',
+            'Forms.Buttons.Actions',
+            'Tables - Body - Alt',
+            'Tables.Body.Main',
+        );
+        $this->assertEquals($expectedKeys, $keys);
+    }
+
+    /**
+     * @test
+     */
     public function depthScoreSort()
     {
         $sections = array(
@@ -567,6 +910,54 @@ comment;
             '3.0.0',
             '3.1',
             '3.2.1'
+        );
+        $this->assertEquals($expectedKeys, $keys);
+    }
+
+    /**
+     * @test
+     */
+    public function alphaDepthScoreSort()
+    {
+        $sections = array(
+            '2' => new Section('// Styleguide 2'),
+            '3.2.1' => new Section('// Styleguide 3.2.1'),
+            '3.1' => new Section('// Styleguide 3.1'),
+            '1.2' => new Section('// Styleguide 1.2'),
+            '1' => new Section('// Styleguide 1'),
+            '3.0.0' => new Section('// Styleguide 3.0.0'),
+            '2.1.2' => new Section('// Styleguide 2.1.2'),
+            'Tables' => new Section('// Styleguide Tables'),
+            'Forms.Buttons.Actions' => new Section('// Styleguide Forms.Buttons.Actions'),
+            'Forms - Checkboxes' => new Section('// Styleguide Forms - Checkboxes'),
+            'Menus.Dropdown' => new Section('// Styleguide Menus.Dropdown'),
+            'Menus' => new Section('// Styleguide Menus'),
+            'Forms-' => new Section('// Styleguide Forms.'),
+            'Forms.Buttons' => new Section('// Styleguide Forms.Buttons'),
+            'Tables - Body - Alt' => new Section('// Styleguide Tables - Body - Alt'),
+            'Tables.Body.Main' => new Section('// Styleguide Tables.Body.Main'),
+        );
+
+        uasort($sections, '\Scan\Kss\Section::alphaDepthScoreSort');
+
+        $keys = array_keys($sections);
+        $expectedKeys = array(
+            '1',
+            '1.2',
+            '2',
+            '2.1.2',
+            '3.0.0',
+            '3.1',
+            '3.2.1',
+            'Forms-',
+            'Forms.Buttons',
+            'Forms.Buttons.Actions',
+            'Forms - Checkboxes',
+            'Menus',
+            'Menus.Dropdown',
+            'Tables',
+            'Tables - Body - Alt',
+            'Tables.Body.Main',
         );
         $this->assertEquals($expectedKeys, $keys);
     }
