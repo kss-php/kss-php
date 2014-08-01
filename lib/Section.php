@@ -295,7 +295,7 @@ class Section
             $referenceComment = $this->getReferenceComment();
             $referenceComment = preg_replace('/\.$/', '', $referenceComment);
 
-            if (preg_match('/Styleguide\s+(.*)/', $referenceComment, $matches)) {
+            if (preg_match('/Styleguide\s+(.*)/i', $referenceComment, $matches)) {
                 $this->reference = trim($matches[1]);
             }
         }
@@ -615,8 +615,7 @@ class Section
         $referenceComment = null;
 
         foreach ($this->getCommentSections() as $commentSection) {
-            // Identify it by the Styleguide 1.2.3. pattern
-            if (preg_match('/Styleguide \w/i', $commentSection)) {
+            if (preg_match('/^(\s*\/\/)?\s*Styleguide \w/i', $commentSection)) {
                 $referenceComment = $commentSection;
                 break;
             }

@@ -461,6 +461,57 @@ comment;
     /**
      * @test
      */
+    public function getReferenceWithOtherStyleguideInComment()
+    {
+        $comment = <<<comment
+# Dropdown Menu
+
+The dropdown bootstrap menu class modified with Scan colors
+
+Markup:
+<div class="dropdown open">
+    <ul class="dropdown-menu \$modifierClass">
+        <li><a href="#" title="Link 1">Link 1</a></li>
+        <li class="divider"></li>
+        <li><a href="#" title="Link 2" class="active">Link 2</a></li>
+        <li><a href="#" title="Link 3">Link 3</a></li>
+        <li class="divider-header">Divider with Text</li>
+        <li><a href="#" title="Link 4">Link 4</a></li>
+    </ul>
+</div>
+<!-- Below div is to help styleguide rendering -->
+<div style="height: 220px;"></div>
+
+.dropdown-menu--wider
+
+Styleguide 3.3
+comment;
+        $section = new Section($comment);
+        $this->assertEquals('3.3', $section->getReference());
+    }
+
+    /**
+     * @test
+     */
+    public function getReferenceWithNoStyleguideReference()
+    {
+        $comment = <<<comment
+Your standard form button.
+
+:hover    - Highlights when hovering.
+:disabled - Dims the button when disabled.
+.primary  - Indicates button is the primary action.
+.smaller  - A little bit smaller now.
+
+No styleguide reference.
+comment;
+        $section = new Section($comment);
+        $this->assertEquals(null, $section->getReference());
+    }
+
+    /**
+     * @test
+     */
     public function getReferenceWords()
     {
         $section = new Section('// Styleguide Forms.Checkboxes');
