@@ -91,7 +91,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(
             'Your standard text input box.',
-            $parser->getSection('Forms.Inputs.Text ')->getDescription()
+            $parser->getSection('Forms.Inputs.Text')->getDescription()
         );
     }
 
@@ -265,7 +265,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function getSectionChildrenWithWords($parser)
     {
-        $expectedSections = array('Buttons - Standard', 'Buttons - Star');
+        $expectedSections = array('Buttons - Standard', 'Buttons - Stars');
         $sections = $parser->getSectionChildren('Buttons');
         $this->assertCount(count($expectedSections), $sections);
         $x = 0;
@@ -274,7 +274,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             ++$x;
         }
 
-        $expectedSections = array('Forms.Input.Text');
+        $expectedSections = array('Forms.Inputs.Text');
         $sections = $parser->getSectionChildren('Forms');
         $this->assertCount(count($expectedSections), $sections);
         $x = 0;

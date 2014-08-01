@@ -1,12 +1,8 @@
 /*
-# Buttons
-
-Styleguide 1
+Styleguide Buttons
 */
 
 /*
-# Standard Button
-
 Your standard form button.
 
 Markup: <button class="$modifierClass">Example Button</button>
@@ -16,7 +12,7 @@ Markup: <button class="$modifierClass">Example Button</button>
 .primary  - Indicates button is the primary action.
 .smaller  - A smaller button
 
-Styleguide 1.1
+Styleguide Buttons - Standard Button
 */
 
 button {
@@ -67,8 +63,6 @@ button:disabled {
 }
 
 /*
-# Star Buttons
-
 A button suitable for giving stars to someone.
 
 Markup: <a class="button stars $modifierClass" href="#">Rate</a>
@@ -76,7 +70,7 @@ Markup: <a class="button stars $modifierClass" href="#">Rate</a>
 .stars--given - A highlight indicating you've already given a star.
 .stars--disabled   - Dims the button to indicate it cannot be used.
 
-Styleguide 1.2
+Styleguide Buttons - Star Buttons
 */
 a.button.stars {
     display: inline-block;

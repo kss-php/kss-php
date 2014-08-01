@@ -68,6 +68,13 @@ class Section
     protected $reference = null;
 
     /**
+     * The section reference identifier dot delimited
+     *
+     * @var string
+     */
+    protected $referenceDotDelimited = null;
+
+    /**
      * Creates a section with the KSS Comment Block and source file
      *
      * @param string $comment
@@ -105,6 +112,11 @@ class Section
         $titleComment = $this->getTitleComment();
         if (preg_match('/^\s*#+\s*(.+)/', $titleComment, $matches)) {
             $title = $matches[1];
+        } elseif (self::isReferenceNumeric($this->getReference())) {
+            return $this->getReference();
+        } else {
+            $reference = $this->getReferenceParts();
+            return end($reference);
         }
 
         return $title;
@@ -283,14 +295,53 @@ class Section
             $referenceComment = $this->getReferenceComment();
             $referenceComment = preg_replace('/\.$/', '', $referenceComment);
 
-            if (preg_match('/Styleguide (\d\S*)/', $referenceComment, $matches)) {
-                $this->reference = $matches[1];
+            if (preg_match('/Styleguide\s+(.*)/', $referenceComment, $matches)) {
+                $this->reference = trim($matches[1]);
             }
         }
 
         return ($trimmed && $this->reference !== null)
             ? self::trimReference($this->reference)
             : $this->reference;
+    }
+
+    /**
+     * Returns the reference dot delimited
+     *
+     * @return string
+     */
+    protected function getReferenceDotDelimited()
+    {
+        if (empty($this->referenceDotDelimited)) {
+            $this->referenceDotDelimited = preg_replace(
+                '/\s*-\s*/',
+                '.',
+                $this->getReference()
+            );
+        }
+        return $this->referenceDotDelimited;
+    }
+
+    /**
+     * Checks to see if a reference is numeric
+     *
+     * @param string
+     *
+     * @return boolean
+     */
+    public static function isReferenceNumeric($reference)
+    {
+        return !preg_match('/[^\d\.]/', $reference);
+    }
+
+    /**
+     * Returns the references as an array of its parts
+     *
+     * @return array
+     */
+    public function getReferenceParts()
+    {
+        return explode('.', $this->getReferenceDotDelimited());
     }
 
     /**
@@ -302,8 +353,8 @@ class Section
      */
     public static function trimReference($reference)
     {
-        if (substr($reference, -1) == '.') {
-            $reference = substr($reference, 0, -1);
+        if (substr($reference, -1) == '.' || substr($reference, -1) == '-') {
+            $reference = trim(substr($reference, 0, -1));
         }
         while (preg_match('/(\.0+)$/', $reference, $matches)) {
             $reference = substr($reference, 0, strlen($matches[1]) * -1);
@@ -321,7 +372,8 @@ class Section
     public function belongsToReference($reference)
     {
         $reference = self::trimReference($reference);
-        return strpos($this->getReference() . '.', $reference . '.') === 0;
+        $reference = preg_replace('/\s*-\s*/', '.', $reference);
+        return strpos($this->getReferenceDotDelimited() . '.', $reference . '.') === 0;
     }
 
     /**
@@ -331,7 +383,7 @@ class Section
      */
     public function getDepth()
     {
-        return self::calcDepth($this->getReference());
+        return self::calcDepth($this->getReferenceDotDelimited());
     }
 
     /**
@@ -344,6 +396,7 @@ class Section
     public static function calcDepth($reference)
     {
         $reference = self::trimReference($reference);
+        $reference = preg_replace('/\s*-\s*/', '.', $reference);
         return substr_count($reference, '.');
     }
 
@@ -354,17 +407,20 @@ class Section
      */
     public function getDepthScore()
     {
-        return self::calcDepthScore($this->getReference());
+        return self::calcDepthScore($this->getReferenceDotDelimited());
     }
 
     /**
      * Calculates and returns the depth score for the section. Useful for sorting
      * sections correctly by their section reference numbers
      *
-     * @return int
+     * @return int|null
      */
     public static function calcDepthScore($reference)
     {
+        if (!self::isReferenceNumeric($reference)) {
+            return null;
+        }
         $reference = self::trimReference($reference);
         $sectionParts = explode('.', $reference);
         $score = 0;
@@ -375,7 +431,7 @@ class Section
     }
 
     /**
-     * Function to help sort sections by depth and then depth score
+     * Function to help sort sections by depth and then depth score or alphabetically
      *
      * @param Section $a
      * @param Section $b
@@ -385,7 +441,7 @@ class Section
     public static function depthSort(Section $a, Section $b)
     {
         if ($a->getDepth() == $b->getDepth()) {
-            return self::depthScoreSort($a, $b);
+            return self::alphaDepthScoreSort($a, $b);
         }
         return $a->getDepth() > $b->getDepth();
     }
@@ -414,8 +470,21 @@ class Section
      */
     public static function alphaDepthScoreSort(Section $a, Section $b)
     {
-        // @TODO: Implement function
-        return 0;
+        $aNumeric = self::isReferenceNumeric($a->getReference());
+        $bNumeric = self::isReferenceNumeric($b->getReference());
+
+        if ($aNumeric && $bNumeric) {
+            return self::depthScoreSort($a, $b);
+        } elseif ($aNumeric) {
+            return -1;
+        } elseif ($bNumeric) {
+            return 1;
+        } else {
+            return strnatcmp(
+                $a->getReferenceDotDelimited(),
+                $b->getReferenceDotDelimited()
+            );
+        }
     }
 
     /**
@@ -547,7 +616,7 @@ class Section
 
         foreach ($this->getCommentSections() as $commentSection) {
             // Identify it by the Styleguide 1.2.3. pattern
-            if (preg_match('/Styleguide \d/i', $commentSection)) {
+            if (preg_match('/Styleguide \w/i', $commentSection)) {
                 $referenceComment = $commentSection;
                 break;
             }

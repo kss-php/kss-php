@@ -473,6 +473,68 @@ comment;
     /**
      * @test
      */
+    public function isReferenceNumeric()
+    {
+        $this->assertTrue(Section::isReferenceNumeric('1'));
+        $this->assertTrue(Section::isReferenceNumeric('1.1'));
+        $this->assertTrue(Section::isReferenceNumeric('1.0.0.1'));
+        $this->assertTrue(Section::isReferenceNumeric('1.0.0.1.'));
+        $this->assertFalse(Section::isReferenceNumeric('Forms'));
+        $this->assertFalse(Section::isReferenceNumeric('Forms.Checkboxes'));
+        $this->assertFalse(Section::isReferenceNumeric('Forms - Special Checkboxes'));
+    }
+
+    /**
+     * @test
+     */
+    public function getReferenceParts()
+    {
+        $section = new Section('// Styleguide 1');
+        $this->assertEquals(
+            array(1),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide 1.1');
+        $this->assertEquals(
+            array(1,1),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide 1.0.0.1');
+        $this->assertEquals(
+            array(1,0,0,1),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide 1.0.0.1.');
+        $this->assertEquals(
+            array(1,0,0,1),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide Forms');
+        $this->assertEquals(
+            array('Forms'),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide Forms.Checkboxes');
+        $this->assertEquals(
+            array('Forms', 'Checkboxes'),
+            $section->getReferenceParts()
+        );
+
+        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $this->assertEquals(
+            array('Forms', 'Special Checkboxes'),
+            $section->getReferenceParts()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function getReferenceTrimmed()
     {
         $this->assertEquals('2.1.1', self::$section->getReference(true));
@@ -515,8 +577,8 @@ comment;
      */
     public function trimReferenceWords()
     {
-        $this->assertEquals('Froms.Checkboxes', Section::trimReference('Forms.Checkboxes'));
-        $this->assertEquals('Froms.Checkboxes', Section::trimReference('Forms.Checkboxes.'));
+        $this->assertEquals('Forms.Checkboxes', Section::trimReference('Forms.Checkboxes'));
+        $this->assertEquals('Forms.Checkboxes', Section::trimReference('Forms.Checkboxes.'));
         $this->assertEquals('Forms - Special Checkboxes', Section::trimReference('Forms - Special Checkboxes'));
         $this->assertEquals('Forms - Special Checkboxes', Section::trimReference('Forms - Special Checkboxes -'));
     }

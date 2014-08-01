@@ -1,20 +1,16 @@
 /*
-# Headings
-
 Headers to help structure the page
 
-Styleguide 2
+Styleguide Headings
 */
 
 /*
-# Section Heading
-
 Heading to be used to separate different sections of page from each other
 
 Markup:
 <h1 class="section-heading">Section Heading</h1>
 
-Styleguide 2.1
+Styleguide Headings - Section Heading
 */
 
 .section-heading {

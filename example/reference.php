@@ -2,12 +2,12 @@
     require_once('includes/bootstrap.inc.php');
     require_once('includes/header.inc.php');
 
-    $reference = (isset($_GET['ref']) && preg_match('/(\d+\.?)+/', $_GET['ref'])) ? $_GET['ref'] : '1';
+    $reference = (isset($_GET['ref'])) ? $_GET['ref'] : 'Buttons';
 
     try {
         $section = $kss->getSection($reference);
     } catch (UnexpectedValueException $e) {
-        $reference = '1';
+        $reference = 'Buttons';
         $section = $kss->getSection($reference);
     }
 ?>
