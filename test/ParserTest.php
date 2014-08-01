@@ -339,13 +339,14 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isKssBlock()
     {
-        $comment = '// This is a style comment
-//
-// .modifier1
-// .modifier2
-//
-// Styleguide 1.2.3
-        ';
+        $comment = <<<comment
+This is a style comment
+
+.modifier1
+.modifier2
+
+Styleguide 1.2.3
+comment;
 
         $this->assertTrue(\Scan\Kss\Parser::isKssBlock($comment));
     }
@@ -355,13 +356,14 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isKssBlockWords()
     {
-        $comment = '// This is a style comment
-//
-// .modifier1
-// .modifier2
-//
-// Styleguide Forms.Buttons
-        ';
+        $comment = <<<comment
+This is a style comment
+
+.modifier1
+.modifier2
+
+Styleguide Forms.Buttons
+comment;
 
         $this->assertTrue(\Scan\Kss\Parser::isKssBlock($comment));
     }
@@ -371,13 +373,31 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isKssBlockWordsDashed()
     {
-        $comment = '// This is a style comment
-//
-// .modifier1
-// .modifier2
-//
-// Styleguide Forms - Buttons - Special Actions
-        ';
+        $comment = <<<comment
+This is a style comment
+
+.modifier1
+.modifier2
+
+Styleguide Forms - Buttons - Special Actions;
+comment;
+
+        $this->assertTrue(\Scan\Kss\Parser::isKssBlock($comment));
+    }
+
+    /**
+     * @test
+     */
+    public function isKssBlockWithNoReference()
+    {
+        $comment = <<<comment
+This is a style comment
+
+.modifier1
+.modifier2
+
+No styleguide reference;
+comment;
 
         $this->assertTrue(\Scan\Kss\Parser::isKssBlock($comment));
     }
@@ -387,9 +407,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isNotKssBlock()
     {
-        $comment = '// This is just a normal comment
-// It has two lines
-        ';
+        $comment = <<<comment
+This is just a normal comment
+It has two lines
+comment;
 
         $this->assertFalse(\Scan\Kss\Parser::isKssBlock($comment));
     }

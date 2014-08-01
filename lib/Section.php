@@ -295,7 +295,7 @@ class Section
             $referenceComment = $this->getReferenceComment();
             $referenceComment = preg_replace('/\.$/', '', $referenceComment);
 
-            if (preg_match('/Styleguide\s+(.*)/i', $referenceComment, $matches)) {
+            if (preg_match('/^\s*Styleguide\s+(.*)/i', $referenceComment, $matches)) {
                 $this->reference = trim($matches[1]);
             }
         }
@@ -320,6 +320,16 @@ class Section
             );
         }
         return $this->referenceDotDelimited;
+    }
+
+    /**
+     * Checks if the Section has a reference
+     *
+     * @return boolean
+     */
+    public function hasReference()
+    {
+        return $this->getReference() !== null;
     }
 
     /**
@@ -613,12 +623,13 @@ class Section
     protected function getReferenceComment()
     {
         $referenceComment = null;
+        $commentSections = $this->getCommentSections();
+        $lastLine = end($commentSections);
 
-        foreach ($this->getCommentSections() as $commentSection) {
-            if (preg_match('/^(\s*\/\/)?\s*Styleguide \w/i', $commentSection)) {
-                $referenceComment = $commentSection;
-                break;
-            }
+        if (preg_match('/^\s*Styleguide \w/i', $lastLine) ||
+            preg_match('/^\s*No styleguide reference/i', $lastLine)
+        ) {
+            $referenceComment = $lastLine;
         }
 
         return $referenceComment;

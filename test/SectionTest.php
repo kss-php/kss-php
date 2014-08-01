@@ -59,10 +59,10 @@ comment;
      */
     public function getTitleFromReferenceWord()
     {
-        $section = new Section('// Styleguide Forms.Checkboxes');
+        $section = new Section('Styleguide Forms.Checkboxes');
         $this->assertEquals('Checkboxes', $section->getTitle());
 
-        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $section = new Section('Styleguide Forms - Special Checkboxes');
         $this->assertEquals('Special Checkboxes', $section->getTitle());
     }
 
@@ -440,10 +440,10 @@ comment;
      */
     public function getSectionWords()
     {
-        $section = new Section('// Styleguide Forms.Checkboxes');
+        $section = new Section('Styleguide Forms.Checkboxes');
         $this->assertEquals('Forms.Checkboxes', $section->getSection());
 
-        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $section = new Section('Styleguide Forms - Special Checkboxes');
         $this->assertEquals('Forms - Special Checkboxes', $section->getSection());
     }
 
@@ -454,7 +454,7 @@ comment;
     {
         $this->assertEquals('2.1.1', self::$section->getReference());
 
-        $section = new Section('// Styleguide 3.0.0');
+        $section = new Section('Styleguide 3.0.0');
         $this->assertEquals('3.0.0', $section->getReference());
     }
 
@@ -514,11 +514,47 @@ comment;
      */
     public function getReferenceWords()
     {
-        $section = new Section('// Styleguide Forms.Checkboxes');
+        $section = new Section('Styleguide Forms.Checkboxes');
         $this->assertEquals('Forms.Checkboxes', $section->getReference());
 
-        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $section = new Section('Styleguide Forms - Special Checkboxes');
         $this->assertEquals('Forms - Special Checkboxes', $section->getReference());
+    }
+
+    /**
+     * @test
+     */
+    public function hasReferenceNumeric()
+    {
+        $section = new Section('Styleguide 1.2.3');
+        $this->assertTrue($section->hasReference());
+    }
+
+    /**
+     * @test
+     */
+    public function hasReferenceWords()
+    {
+        $section = new Section('Styleguide Forms.Checkboxes');
+        $this->assertTrue($section->hasReference());
+    }
+
+    /**
+     * @test
+     */
+    public function hasReferenceWordsDashed()
+    {
+        $section = new Section('Styleguide Forms - Special Checkboxes');
+        $this->assertTrue($section->hasReference());
+    }
+
+    /**
+     * @test
+     */
+    public function hasReferenceNoReference()
+    {
+        $section = new Section('No styleguide reference');
+        $this->assertFalse($section->hasReference());
     }
 
     /**
@@ -540,43 +576,43 @@ comment;
      */
     public function getReferenceParts()
     {
-        $section = new Section('// Styleguide 1');
+        $section = new Section('Styleguide 1');
         $this->assertEquals(
             array(1),
             $section->getReferenceParts()
         );
 
-        $section = new Section('// Styleguide 1.1');
+        $section = new Section('Styleguide 1.1');
         $this->assertEquals(
             array(1,1),
             $section->getReferenceParts()
         );
 
-        $section = new Section('// Styleguide 1.0.0.1');
+        $section = new Section('Styleguide 1.0.0.1');
         $this->assertEquals(
             array(1,0,0,1),
             $section->getReferenceParts()
         );
 
-        $section = new Section('// Styleguide 1.0.0.1.');
+        $section = new Section('Styleguide 1.0.0.1.');
         $this->assertEquals(
             array(1,0,0,1),
             $section->getReferenceParts()
         );
 
-        $section = new Section('// Styleguide Forms');
+        $section = new Section('Styleguide Forms');
         $this->assertEquals(
             array('Forms'),
             $section->getReferenceParts()
         );
 
-        $section = new Section('// Styleguide Forms.Checkboxes');
+        $section = new Section('Styleguide Forms.Checkboxes');
         $this->assertEquals(
             array('Forms', 'Checkboxes'),
             $section->getReferenceParts()
         );
 
-        $section = new Section('// Styleguide Forms - Special Checkboxes');
+        $section = new Section('Styleguide Forms - Special Checkboxes');
         $this->assertEquals(
             array('Forms', 'Special Checkboxes'),
             $section->getReferenceParts()
@@ -590,7 +626,7 @@ comment;
     {
         $this->assertEquals('2.1.1', self::$section->getReference(true));
 
-        $section = new Section('// Styleguide 3.0.0');
+        $section = new Section('Styleguide 3.0.0');
         $this->assertEquals('3', $section->getReference(true));
     }
 
@@ -599,10 +635,10 @@ comment;
      */
     public function getReferenceTrimmedWords()
     {
-        $section = new Section('// Styleguide Forms.Checkboxes.');
+        $section = new Section('Styleguide Forms.Checkboxes.');
         $this->assertEquals('Forms.Checkboxes', $section->getReference(true));
 
-        $section = new Section('// Styleguide Forms - Special Checkboxes -');
+        $section = new Section('Styleguide Forms - Special Checkboxes -');
         $this->assertEquals('Forms - Special Checkboxes', $section->getReference(true));
     }
 
@@ -670,7 +706,7 @@ comment;
      */
     public function belongsToReferenceWords()
     {
-        $section = new Section('// Styleguide Forms.Buttons.Actions.');
+        $section = new Section('Styleguide Forms.Buttons.Actions.');
         $this->assertTrue($section->belongsToReference('Forms'));
         $this->assertTrue($section->belongsToReference('Forms.Buttons'));
         $this->assertTrue($section->belongsToReference('Forms.Buttons.Actions'));
@@ -687,7 +723,7 @@ comment;
      */
     public function belongsToReferenceWordsDashed()
     {
-        $section = new Section('// Styleguide Forms - Buttons - Special Actions -');
+        $section = new Section('Styleguide Forms - Buttons - Special Actions -');
         $this->assertTrue($section->belongsToReference('Forms'));
         $this->assertTrue($section->belongsToReference('Forms - Buttons'));
         $this->assertTrue($section->belongsToReference('Forms-Buttons'));
@@ -716,10 +752,10 @@ comment;
      */
     public function getDepthWords()
     {
-        $section = new Section('// Styleguide Forms.Buttons.Actions.');
+        $section = new Section('Styleguide Forms.Buttons.Actions.');
         $this->assertEquals(2, $section->getDepth());
 
-        $section = new Section('// Styleguide Forms - Buttons - Actions -');
+        $section = new Section('Styleguide Forms - Buttons - Actions -');
         $this->assertEquals(2, $section->getDepth());
     }
 
@@ -799,13 +835,13 @@ comment;
     public function depthSort()
     {
         $sections = array(
-            '2' => new Section('// Styleguide 2'),
-            '3.2.1' => new Section('// Styleguide 3.2.1'),
-            '3.1' => new Section('// Styleguide 3.1'),
-            '1.2' => new Section('// Styleguide 1.2'),
-            '1' => new Section('// Styleguide 1'),
-            '3.0.0' => new Section('// Styleguide 3.0.0'),
-            '2.1.2' => new Section('// Styleguide 2.1.2'),
+            '2' => new Section('Styleguide 2'),
+            '3.2.1' => new Section('Styleguide 3.2.1'),
+            '3.1' => new Section('Styleguide 3.1'),
+            '1.2' => new Section('Styleguide 1.2'),
+            '1' => new Section('Styleguide 1'),
+            '3.0.0' => new Section('Styleguide 3.0.0'),
+            '2.1.2' => new Section('Styleguide 2.1.2'),
         );
 
         uasort($sections, '\Scan\Kss\Section::depthSort');
@@ -829,14 +865,14 @@ comment;
     public function depthSortWords()
     {
         $sections = array(
-            'Tables' => new Section('// Styleguide Tables'),
-            'Forms.Buttons.Actions' => new Section('// Styleguide Forms.Buttons.Actions'),
-            'Forms.Checkboxes' => new Section('// Styleguide Forms.Checkboxes'),
-            'Menus.Dropdown' => new Section('// Styleguide Menus.Dropdown'),
-            'Menus' => new Section('// Styleguide Menus'),
-            'Forms.' => new Section('// Styleguide Forms.'),
-            'Forms.Buttons' => new Section('// Styleguide Forms.Buttons'),
-            'Tables.Body.Alt' => new Section('// Styleguide Tables.Body.Alt'),
+            'Tables' => new Section('Styleguide Tables'),
+            'Forms.Buttons.Actions' => new Section('Styleguide Forms.Buttons.Actions'),
+            'Forms.Checkboxes' => new Section('Styleguide Forms.Checkboxes'),
+            'Menus.Dropdown' => new Section('Styleguide Menus.Dropdown'),
+            'Menus' => new Section('Styleguide Menus'),
+            'Forms.' => new Section('Styleguide Forms.'),
+            'Forms.Buttons' => new Section('Styleguide Forms.Buttons'),
+            'Tables.Body.Alt' => new Section('Styleguide Tables.Body.Alt'),
         );
 
         uasort($sections, '\Scan\Kss\Section::depthSort');
@@ -861,14 +897,14 @@ comment;
     public function depthSortWordsDashed()
     {
         $sections = array(
-            'Tables' => new Section('// Styleguide Tables'),
-            'Forms - Buttons - Actions' => new Section('// Styleguide Forms - Buttons -Actions'),
-            'Forms - Checkboxes' => new Section('// Styleguide Forms - Checkboxes'),
-            'Menus - Dropdown' => new Section('// Styleguide Menus - Dropdown'),
-            'Menus' => new Section('// Styleguide Menus'),
-            'Forms -' => new Section('// Styleguide Forms -'),
-            'Forms - Buttons' => new Section('// Styleguide Forms - Buttons'),
-            'Tables - Body - Alt' => new Section('// Styleguide Tables - Body - Alt'),
+            'Tables' => new Section('Styleguide Tables'),
+            'Forms - Buttons - Actions' => new Section('Styleguide Forms - Buttons -Actions'),
+            'Forms - Checkboxes' => new Section('Styleguide Forms - Checkboxes'),
+            'Menus - Dropdown' => new Section('Styleguide Menus - Dropdown'),
+            'Menus' => new Section('Styleguide Menus'),
+            'Forms -' => new Section('Styleguide Forms -'),
+            'Forms - Buttons' => new Section('Styleguide Forms - Buttons'),
+            'Tables - Body - Alt' => new Section('Styleguide Tables - Body - Alt'),
         );
 
         uasort($sections, '\Scan\Kss\Section::depthSort');
@@ -893,22 +929,22 @@ comment;
     public function depthSortMixed()
     {
         $sections = array(
-            '2' => new Section('// Styleguide 2'),
-            '3.2.1' => new Section('// Styleguide 3.2.1'),
-            '3.1' => new Section('// Styleguide 3.1'),
-            '1.2' => new Section('// Styleguide 1.2'),
-            '1' => new Section('// Styleguide 1'),
-            '3.0.0' => new Section('// Styleguide 3.0.0'),
-            '2.1.2' => new Section('// Styleguide 2.1.2'),
-            'Tables' => new Section('// Styleguide Tables'),
-            'Forms.Buttons.Actions' => new Section('// Styleguide Forms.Buttons.Actions'),
-            'Forms - Checkboxes' => new Section('// Styleguide Forms - Checkboxes'),
-            'Menus.Dropdown' => new Section('// Styleguide Menus.Dropdown'),
-            'Menus' => new Section('// Styleguide Menus'),
-            'Forms-' => new Section('// Styleguide Forms.'),
-            'Forms.Buttons' => new Section('// Styleguide Forms.Buttons'),
-            'Tables - Body - Alt' => new Section('// Styleguide Tables - Body - Alt'),
-            'Tables.Body.Main' => new Section('// Styleguide Tables.Body.Main'),
+            '2' => new Section('Styleguide 2'),
+            '3.2.1' => new Section('Styleguide 3.2.1'),
+            '3.1' => new Section('Styleguide 3.1'),
+            '1.2' => new Section('Styleguide 1.2'),
+            '1' => new Section('Styleguide 1'),
+            '3.0.0' => new Section('Styleguide 3.0.0'),
+            '2.1.2' => new Section('Styleguide 2.1.2'),
+            'Tables' => new Section('Styleguide Tables'),
+            'Forms.Buttons.Actions' => new Section('Styleguide Forms.Buttons.Actions'),
+            'Forms - Checkboxes' => new Section('Styleguide Forms - Checkboxes'),
+            'Menus.Dropdown' => new Section('Styleguide Menus.Dropdown'),
+            'Menus' => new Section('Styleguide Menus'),
+            'Forms-' => new Section('Styleguide Forms.'),
+            'Forms.Buttons' => new Section('Styleguide Forms.Buttons'),
+            'Tables - Body - Alt' => new Section('Styleguide Tables - Body - Alt'),
+            'Tables.Body.Main' => new Section('Styleguide Tables.Body.Main'),
         );
 
         uasort($sections, '\Scan\Kss\Section::depthSort');
@@ -941,13 +977,13 @@ comment;
     public function depthScoreSort()
     {
         $sections = array(
-            '2' => new Section('// Styleguide 2'),
-            '3.2.1' => new Section('// Styleguide 3.2.1'),
-            '3.1' => new Section('// Styleguide 3.1'),
-            '1.2' => new Section('// Styleguide 1.2'),
-            '1' => new Section('// Styleguide 1'),
-            '3.0.0' => new Section('// Styleguide 3.0.0'),
-            '2.1.2' => new Section('// Styleguide 2.1.2'),
+            '2' => new Section('Styleguide 2'),
+            '3.2.1' => new Section('Styleguide 3.2.1'),
+            '3.1' => new Section('Styleguide 3.1'),
+            '1.2' => new Section('Styleguide 1.2'),
+            '1' => new Section('Styleguide 1'),
+            '3.0.0' => new Section('Styleguide 3.0.0'),
+            '2.1.2' => new Section('Styleguide 2.1.2'),
         );
 
         uasort($sections, '\Scan\Kss\Section::depthScoreSort');
@@ -971,22 +1007,22 @@ comment;
     public function alphaDepthScoreSort()
     {
         $sections = array(
-            '2' => new Section('// Styleguide 2'),
-            '3.2.1' => new Section('// Styleguide 3.2.1'),
-            '3.1' => new Section('// Styleguide 3.1'),
-            '1.2' => new Section('// Styleguide 1.2'),
-            '1' => new Section('// Styleguide 1'),
-            '3.0.0' => new Section('// Styleguide 3.0.0'),
-            '2.1.2' => new Section('// Styleguide 2.1.2'),
-            'Tables' => new Section('// Styleguide Tables'),
-            'Forms.Buttons.Actions' => new Section('// Styleguide Forms.Buttons.Actions'),
-            'Forms - Checkboxes' => new Section('// Styleguide Forms - Checkboxes'),
-            'Menus.Dropdown' => new Section('// Styleguide Menus.Dropdown'),
-            'Menus' => new Section('// Styleguide Menus'),
-            'Forms-' => new Section('// Styleguide Forms.'),
-            'Forms.Buttons' => new Section('// Styleguide Forms.Buttons'),
-            'Tables - Body - Alt' => new Section('// Styleguide Tables - Body - Alt'),
-            'Tables.Body.Main' => new Section('// Styleguide Tables.Body.Main'),
+            '2' => new Section('Styleguide 2'),
+            '3.2.1' => new Section('Styleguide 3.2.1'),
+            '3.1' => new Section('Styleguide 3.1'),
+            '1.2' => new Section('Styleguide 1.2'),
+            '1' => new Section('Styleguide 1'),
+            '3.0.0' => new Section('Styleguide 3.0.0'),
+            '2.1.2' => new Section('Styleguide 2.1.2'),
+            'Tables' => new Section('Styleguide Tables'),
+            'Forms.Buttons.Actions' => new Section('Styleguide Forms.Buttons.Actions'),
+            'Forms - Checkboxes' => new Section('Styleguide Forms - Checkboxes'),
+            'Menus.Dropdown' => new Section('Styleguide Menus.Dropdown'),
+            'Menus' => new Section('Styleguide Menus'),
+            'Forms-' => new Section('Styleguide Forms.'),
+            'Forms.Buttons' => new Section('Styleguide Forms.Buttons'),
+            'Tables - Body - Alt' => new Section('Styleguide Tables - Body - Alt'),
+            'Tables.Body.Main' => new Section('Styleguide Tables.Body.Main'),
         );
 
         uasort($sections, '\Scan\Kss\Section::alphaDepthScoreSort');

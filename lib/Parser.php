@@ -193,6 +193,7 @@ class Parser
     {
         $commentLines = explode("\n\n", $comment);
         $lastLine = end($commentLines);
-        return (bool) preg_match('/Styleguide \w/i', $lastLine);
+        return preg_match('/^\s*Styleguide \w/i', $lastLine) ||
+            preg_match('/^\s*No styleguide reference/i', $lastLine);
     }
 }
