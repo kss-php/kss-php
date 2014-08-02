@@ -78,10 +78,16 @@ class Parser
     public function getSection($reference)
     {
         $reference = Section::trimReference($reference);
-        if (!array_key_exists($reference, $this->sections)) {
-            throw new UnexpectedValueException('Section with a reference of ' . $reference . ' cannot be found!');
+        $reference = strtolower(Section::normalizeReference($reference));
+
+        foreach ($this->sections as $sectionKey => $section) {
+            $potentialMatch = strtolower(Section::normalizeReference($sectionKey));
+            if ($reference === $potentialMatch) {
+                return $section;
+            }
         }
-        return $this->sections[$reference];
+
+        throw new UnexpectedValueException('Section with a reference of ' . $reference . ' cannot be found!');
     }
 
     /**
@@ -125,7 +131,7 @@ class Parser
      */
     public function getSectionChildren($reference, $levelsDown = null)
     {
-        $reference = preg_replace('/\s*-\s*/', '.', $reference);
+        $reference = strtolower(Section::normalizeReference($reference));
         $this->sortSections();
 
         $sectionKeys = array_keys($this->sections);
@@ -140,7 +146,7 @@ class Parser
         $reference .= '.';
 
         foreach ($sectionKeys as $sectionKey) {
-            $testSectionKey = preg_replace('/\s*-\s*/', '.', $sectionKey);
+            $testSectionKey = strtolower(Section::normalizeReference($sectionKey));
             // Only get sections within that level. Do not get the level itself
             if (strpos($testSectionKey . '.', $reference) === 0
                 && $testSectionKey . '.' != $reference
