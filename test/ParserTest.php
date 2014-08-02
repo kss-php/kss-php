@@ -138,6 +138,30 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @depends parseScssWords
+     */
+    public function getSectionWordsCaseInsensitive($parser)
+    {
+        $this->assertEquals(
+            'Buttons - Standard',
+            $parser->getSection('buttons - standard')->getReference()
+        );
+    }
+
+    /**
+     * @test
+     * @depends parseScssWords
+     */
+    public function getSectionWordsDashToDots($parser)
+    {
+        $this->assertEquals(
+            'Buttons - Standard',
+            $parser->getSection('buttons.standard')->getReference()
+        );
+    }
+
+    /**
+     * @test
      * @expectedException Scan\Kss\Exception\UnexpectedValueException
      * @depends parseScss
      */
@@ -276,6 +300,47 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $expectedSections = array('Forms.Inputs.Text');
         $sections = $parser->getSectionChildren('Forms');
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getReference());
+            ++$x;
+        }
+    }
+
+    /**
+     * @test
+     * @depends parseScssWords
+     */
+    public function getSectionChildrenWithWordsCaseInsensitive($parser)
+    {
+        $expectedSections = array('Buttons - Standard', 'Buttons - Stars');
+        $sections = $parser->getSectionChildren('buttons');
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getReference());
+            ++$x;
+        }
+
+        $expectedSections = array('Forms.Inputs.Text');
+        $sections = $parser->getSectionChildren('forms');
+        $this->assertCount(count($expectedSections), $sections);
+        $x = 0;
+        foreach ($sections as $section) {
+            $this->assertEquals($expectedSections[$x], $section->getReference());
+            ++$x;
+        }
+    }
+
+    /**
+     * @test
+     * @depends parseScssWords
+     */
+    public function getSectionChildrenWithWordsDashToDots($parser)
+    {
+        $expectedSections = array('Forms.Inputs.Text');
+        $sections = $parser->getSectionChildren('forms - inputs');
         $this->assertCount(count($expectedSections), $sections);
         $x = 0;
         foreach ($sections as $section) {

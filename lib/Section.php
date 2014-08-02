@@ -313,11 +313,7 @@ class Section
     protected function getReferenceDotDelimited()
     {
         if (empty($this->referenceDotDelimited)) {
-            $this->referenceDotDelimited = preg_replace(
-                '/\s*-\s*/',
-                '.',
-                $this->getReference()
-            );
+            $this->referenceDotDelimited = self::normalizeReference($this->getReference());
         }
         return $this->referenceDotDelimited;
     }
@@ -373,6 +369,18 @@ class Section
     }
 
     /**
+     * Normalizes references so all delimiters are standardized
+     *
+     * @param string $reference
+     *
+     * @return string
+     */
+    public static function normalizeReference($reference)
+    {
+        return preg_replace('/\s*-\s*/', '.', $reference);
+    }
+
+    /**
      * Checks to see if a section belongs to a specified reference
      *
      * @param string $reference
@@ -382,8 +390,8 @@ class Section
     public function belongsToReference($reference)
     {
         $reference = self::trimReference($reference);
-        $reference = preg_replace('/\s*-\s*/', '.', $reference);
-        return strpos($this->getReferenceDotDelimited() . '.', $reference . '.') === 0;
+        $reference = self::normalizeReference($reference);
+        return stripos($this->getReferenceDotDelimited() . '.', $reference . '.') === 0;
     }
 
     /**
@@ -406,7 +414,7 @@ class Section
     public static function calcDepth($reference)
     {
         $reference = self::trimReference($reference);
-        $reference = preg_replace('/\s*-\s*/', '.', $reference);
+        $reference = self::normalizeReference($reference);
         return substr_count($reference, '.');
     }
 

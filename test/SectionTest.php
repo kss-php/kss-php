@@ -673,6 +673,29 @@ comment;
     /**
      * @test
      */
+    public function normalizeReference()
+    {
+        $this->assertEquals('1.0', Section::normalizeReference('1.0'));
+        $this->assertEquals('1.0.', Section::normalizeReference('1.0.'));
+        $this->assertEquals('1.0', Section::normalizeReference('1-0'));
+        $this->assertEquals('1.0', Section::normalizeReference('1 - 0'));
+    }
+
+    /**
+     * @test
+     */
+    public function normalizeReferenceWords()
+    {
+        $this->assertEquals('Forms', Section::normalizeReference('Forms'));
+        $this->assertEquals('Forms.Checkboxes', Section::normalizeReference('Forms.Checkboxes'));
+        $this->assertEquals('Forms.Checkboxes.', Section::normalizeReference('Forms.Checkboxes -'));
+        $this->assertEquals('Forms.Checkboxes', Section::normalizeReference('Forms - Checkboxes'));
+        $this->assertEquals('Forms.Checkboxes.Special', Section::normalizeReference('Forms - Checkboxes-Special'));
+    }
+
+    /**
+     * @test
+     */
     public function belongsToReference()
     {
         $this->assertTrue(self::$section->belongsToReference('2'));
@@ -721,6 +744,23 @@ comment;
     /**
      * @test
      */
+    public function belongsToReferenceWordsCaseInsensitive()
+    {
+        $section = new Section('Styleguide Forms.Buttons.Actions.');
+        $this->assertTrue($section->belongsToReference('forms'));
+        $this->assertTrue($section->belongsToReference('forms.buttons'));
+        $this->assertTrue($section->belongsToReference('forms.buttons.actions'));
+        $this->assertTrue($section->belongsToReference('forms.buttons.actions.'));
+
+        $this->assertFalse($section->belongsToReference('tables'));
+        $this->assertFalse($section->belongsToReference('forms.checkboxes'));
+        $this->assertFalse($section->belongsToReference('forms.buttons.links'));
+        $this->assertFalse($section->belongsToReference('forms.buttons.actions.special'));
+    }
+
+    /**
+     * @test
+     */
     public function belongsToReferenceWordsDashed()
     {
         $section = new Section('Styleguide Forms - Buttons - Special Actions -');
@@ -737,6 +777,26 @@ comment;
         $this->assertFalse($section->belongsToReference('Forms - Checkboxes'));
         $this->assertFalse($section->belongsToReference('Forms - Buttons - Links'));
         $this->assertFalse($section->belongsToReference('Forms - Buttons - Special Actions - Super Special'));
+    }
+
+    /**
+     * @test
+     */
+    public function belongsToReferenceWordsDashedToDots()
+    {
+        $section = new Section('Styleguide Forms - Buttons - Special Actions -');
+        $this->assertTrue($section->belongsToReference('Forms'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons.Special Actions'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons.Special Actions.'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons.Special Actions'));
+        $this->assertTrue($section->belongsToReference('Forms.Buttons.Special Actions.'));
+
+        $this->assertFalse($section->belongsToReference('Tables'));
+        $this->assertFalse($section->belongsToReference('Forms.Checkboxes'));
+        $this->assertFalse($section->belongsToReference('Forms.Buttons.Links'));
+        $this->assertFalse($section->belongsToReference('Forms.Buttons.Special Actions.Super Special'));
     }
 
     /**
