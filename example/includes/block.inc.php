@@ -43,6 +43,12 @@
                 <?php } ?>
             </ul>
         <?php } ?>
+
+        <?php
+            if ($section->getCompatibility()) {
+        ?>
+            <p class="styleguide__compatibility"><?php echo nl2br($section->getCompatibility()); ?></p>
+        <?php } ?>
     </div>
 
     <div class="styleguide__elements">
