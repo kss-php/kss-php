@@ -218,7 +218,7 @@ class Section
     {
         if ($this->compatibility === null) {
             if ($compatibilityComment = $this->getCompatibilityComment()) {
-                $this->compatibility = trim(preg_replace('/^\s*Compatibility:/i', '', $compatibilityComment));
+                $this->compatibility = trim($compatibilityComment);
             }
         }
 
@@ -648,8 +648,10 @@ class Section
         $compatibilityComment = null;
 
         foreach ($this->getCommentSections() as $commentSection) {
-            // Identify the compatibility notice by the Compatibility: marker
-            if (preg_match('/^\s*Compatibility:/i', $commentSection)) {
+            // Compatible in IE6+, Firefox 2+, Safari 4+.
+            // Compatibility: IE6+, Firefox 2+, Safari 4+.
+            // Compatibility untested.
+            if (preg_match('/^\s*Compatib(le|ility):?\s+/i', $commentSection)) {
                 $compatibilityComment = $commentSection;
                 break;
             }

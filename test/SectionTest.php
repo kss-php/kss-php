@@ -19,8 +19,6 @@ And another line describing the button.
 
 Markup: <div class="$modifierClass"></div>
 
-Compatibility:  IE6+, Firefox 2+, Safari 4+.
-
 Deprecated: Styling for legacy wikis. We'll drop support for these wikis on July 13, 2007.
 
 Experimental: An alternative signup button styling used in AB Test #195.
@@ -30,6 +28,8 @@ Experimental: An alternative signup button styling used in AB Test #195.
 .primary - Indicates button is the primary action.
 .smaller - A smaller button
 .altFormButton @extends .formButton - An extension of .formButton
+
+Compatible in IE6+, Firefox 2+, Safari 4+.
 
 Styleguide 2.1.1.
 comment;
@@ -195,14 +195,14 @@ comment;
      */
     public function getCompatibility()
     {
-        $expected = "IE6+, Firefox 2+, Safari 4+.";
+        $expected = "Compatible in IE6+, Firefox 2+, Safari 4+.";
         $this->assertEquals($expected, self::$section->getCompatibility());
     }
 
     /**
      * @test
      */
-    public function getCompatibilityMultiline()
+    public function getCompatibilityColon()
     {
         $commentText = <<<comment
 # Form Button
@@ -211,10 +211,32 @@ Your standard form button.
 
 And another line describing the button.
 
-Compatibility:
-IE6+,
-Firefox 2+,
-Safari 4+.
+:hover - Highlights when hovering.
+:disabled - Dims the button when disabled.
+.primary - Indicates button is the primary action.
+.smaller - A smaller button
+.altFormButton @extends .formButton - An extension of .formButton
+
+Compatibility: IE6+, Firefox 2+, Safari 4+.
+
+Styleguide 2.1.1.
+comment;
+
+        $testSection = new Section($commentText);
+        $this->assertEquals('Compatibility: IE6+, Firefox 2+, Safari 4+.', $testSection->getCompatibility());
+    }
+
+    /**
+     * @test
+     */
+    public function getCompatibilityUntested()
+    {
+        $commentText = <<<comment
+# Form Button
+
+Your standard form button.
+
+And another line describing the button.
 
 :hover - Highlights when hovering.
 :disabled - Dims the button when disabled.
@@ -222,17 +244,13 @@ Safari 4+.
 .smaller - A smaller button
 .altFormButton @extends .formButton - An extension of .formButton
 
+Compatibility untested.
+
 Styleguide 2.1.1.
 comment;
 
-        $expected = <<<comment
-IE6+,
-Firefox 2+,
-Safari 4+.
-comment;
-
         $testSection = new Section($commentText);
-        $this->assertEquals($expected, $testSection->getCompatibility());
+        $this->assertEquals('Compatibility untested.', $testSection->getCompatibility());
     }
 
     /**
@@ -257,7 +275,7 @@ Styleguide 2.1.1.
 comment;
 
         $testSection = new Section($commentText);
-        $this->assertEmpty($testSection->getCompatibility());
+        $this->assertNull($testSection->getCompatibility());
     }
 
     /**
