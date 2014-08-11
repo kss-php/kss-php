@@ -40,6 +40,16 @@
 .styleguide__modifier-name {
     font-weight: bold;
 }
+.styleguide__parameters {
+    margin: 0 0 0 10px;
+}
+.styleguide__parameters li {
+    list-style-type: none;
+    margin-left: 0;
+}
+.styleguide__parameter-name {
+    font-weight: bold;
+}
 .styleguide__element {
     position: relative;
     padding: 20px;

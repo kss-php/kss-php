@@ -10,14 +10,14 @@ class SectionTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $commentText = <<<comment
+        $commentText = <<<'comment'
 # Form Button
 
 Your standard form button.
 
 And another line describing the button.
 
-Markup: <div class="\$modifierClass"></div>
+Markup: <div class="$modifierClass"></div>
 
 Compatibility:  IE6+, Firefox 2+, Safari 4+.
 
@@ -423,6 +423,46 @@ comment;
         $modifiers = $testSection->getModifiers();
         $description = $modifiers[0]->getDescription();
         $expected = 'A smaller button - really small';
+
+        $this->assertEquals($expected, $description);
+    }
+
+    /**
+     * @test
+     */
+    public function getParameters()
+    {
+        $commentText = <<<'comment'
+Mixin for parameter
+
+$start - First description of the parameter
+%middle - Second description of the parameter
+@end - Third description of the parameter
+
+Styleguide 2.1.1.
+comment;
+
+        $testSection = new Section($commentText);
+        $this->assertCount(3, $testSection->getParameters());
+    }
+
+    /**
+     * @test
+     */
+    public function getParametersDescriptionContainsDelimiter()
+    {
+        $commentText = <<<'comment'
+Mixin for parameter
+
+$parameter  - Description of the parameter - really fancy
+
+Styleguide 2.1.1.
+comment;
+
+        $testSection = new Section($commentText);
+        $parameters = $testSection->getParameters();
+        $description = $parameters[0]->getDescription();
+        $expected = 'Description of the parameter - really fancy';
 
         $this->assertEquals($expected, $description);
     }
