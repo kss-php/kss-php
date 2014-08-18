@@ -62,6 +62,26 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     */
+    public function parseStyl()
+    {
+        $parser = new \Scan\Kss\Parser('test/fixtures/styl');
+        $this->assertEquals('Your standard form button.', $parser->getSection('2.1.1')->getDescription());
+        return $parser;
+    }
+
+    /**
+     * @test
+     */
+    public function parseStylus()
+    {
+        $parser = new \Scan\Kss\Parser('test/fixtures/stylus');
+        $this->assertEquals('Your standard form button.', $parser->getSection('2.1.1')->getDescription());
+        return $parser;
+    }
+
+    /**
+     * @test
      * @depends parseSass
      */
     public function parseMultiLineSass($parser)
@@ -110,6 +130,26 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      * @depends parseLess
      */
     public function parseNestedLess($parser)
+    {
+        $this->assertEquals('Your standard form element.', $parser->getSection('3.0.0')->getDescription());
+        $this->assertEquals('Your standard text input box.', $parser->getSection('3.0.1')->getDescription());
+    }
+
+    /**
+     * @test
+     * @depends parseStyl
+     */
+    public function parseNestedStyl($parser)
+    {
+        $this->assertEquals('Your standard form element.', $parser->getSection('3.0.0')->getDescription());
+        $this->assertEquals('Your standard text input box.', $parser->getSection('3.0.1')->getDescription());
+    }
+
+    /**
+     * @test
+     * @depends parseStylus
+     */
+    public function parseNestedStylus($parser)
     {
         $this->assertEquals('Your standard form element.', $parser->getSection('3.0.0')->getDescription());
         $this->assertEquals('Your standard text input box.', $parser->getSection('3.0.1')->getDescription());
