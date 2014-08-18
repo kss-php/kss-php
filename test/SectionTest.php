@@ -168,6 +168,9 @@ comment;
         $this->assertEquals($expected, $testSection->getMarkup());
     }
 
+    /**
+     * @test
+     */
     public function getMarkupNull()
     {
         $commentText = <<<comment
@@ -187,7 +190,40 @@ Styleguide 2.1.1.
 comment;
 
         $testSection = new Section($commentText);
-        $this->assertEmpty($testSection->getMarkup());
+        $this->assertNull($testSection->getMarkup());
+    }
+
+    /**
+     * @test
+     */
+    public function hasMarkup()
+    {
+        $this->assertTrue(self::$section->hasMarkup());
+    }
+
+    /**
+     * @test
+     */
+    public function hasMarkupFalse()
+    {
+        $commentText = <<<comment
+# Form Button
+
+Your standard form button.
+
+And another line describing the button.
+
+:hover - Highlights when hovering.
+:disabled - Dims the button when disabled.
+.primary - Indicates button is the primary action.
+.smaller - A smaller button
+.altFormButton @extends .formButton - An extension of .formButton
+
+Styleguide 2.1.1.
+comment;
+
+        $testSection = new Section($commentText);
+        $this->assertFalse($testSection->hasMarkup());
     }
 
     /**
