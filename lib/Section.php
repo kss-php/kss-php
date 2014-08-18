@@ -178,6 +178,16 @@ class Section
     }
 
     /**
+     * Returns a boolean value regarding the presence of markup in the kss-block
+     *
+     * @return boolean
+     */
+    public function hasMarkup()
+    {
+        return $this->getMarkup() !== null;
+    }
+
+    /**
      * Returns the deprecation notice defined in the section
      *
      * @return string
