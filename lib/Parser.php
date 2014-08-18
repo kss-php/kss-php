@@ -38,8 +38,8 @@ class Parser
     public function __construct($paths)
     {
         $finder = new Finder();
-        // Only accept css, sass, scss, and less files.
-        $finder->files()->name('/\.(css|sass|scss|less)$/')->in($paths);
+        // Only accept css, sass, scss, less, and stylus files.
+        $finder->files()->name('/\.(css|sass|scss|less|styl(?:us)?)$/')->in($paths);
 
         foreach ($finder as $fileInfo) {
             $file = new \splFileObject($fileInfo);
