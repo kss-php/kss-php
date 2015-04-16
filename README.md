@@ -47,10 +47,10 @@ This repository includes a php library suitable for parsing SASS, SCSS, and CSS 
 <?php
 
 require_once('../vendors/autoload.php');
-$styleguide = new Kss\Parser('public/stylesheets')
+$styleguide = new \Kss\Parser('public/stylesheets');
 
 $section = $styleguide->getSection('Buttons - Star Button');
-// Returns a Kss\Section object
+// Returns a \Kss\Section object
 
 echo $section->getTitle();
 // Echoes "Star Button"
@@ -62,7 +62,7 @@ echo $section->getMarkup();
 // echoes "<a class="button star $modifierClass">Button</a>"
 
 $modifier = current($section->getModifiers());
-// Returns a Kss\Modifier object
+// Returns a \Kss\Modifier object
 
 echo $modifier->getName();
 // echoes ':hover'
