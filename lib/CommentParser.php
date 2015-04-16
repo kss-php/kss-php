@@ -7,7 +7,7 @@
  * in the object for later use.
  */
 
-namespace Scan\Kss;
+namespace Kss;
 
 class CommentParser
 {

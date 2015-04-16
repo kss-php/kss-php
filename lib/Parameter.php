@@ -6,7 +6,7 @@
  * Object to represent the Parameter section of a KSS Comment Block
  */
 
-namespace Scan\Kss;
+namespace Kss;
 
 class Parameter
 {

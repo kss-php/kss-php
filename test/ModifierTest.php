@@ -1,6 +1,6 @@
 <?php
 
-namespace Scan\Test;
+namespace Test;
 
 class ModifierTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,12 +11,12 @@ class ModifierTest extends \PHPUnit_Framework_TestCase
     {
         $name = '.modifier';
         $description = 'This is a test modifier';
-        self::$modifier = new \Scan\Kss\Modifier($name, $description);
+        self::$modifier = new \Kss\Modifier($name, $description);
         self::$modifier->setMarkup('<div class="plainClass $modifierClass">test</div>');
 
         $name = '.extenderModifier @extend .modifier';
         $description = 'This is a test modifier that extends from .modifier';
-        self::$extenderModifier = new \Scan\Kss\Modifier($name, $description);
+        self::$extenderModifier = new \Kss\Modifier($name, $description);
         self::$extenderModifier->setMarkup('<div class="modifier $modifierClass">test</div>');
     }
 
@@ -151,7 +151,7 @@ class ModifierTest extends \PHPUnit_Framework_TestCase
     {
         $name = '.extenderModifier @extend .button';
         $description = 'This is a test modifier that extends from .button';
-        $extenderModifier = new \Scan\Kss\Modifier($name, $description);
+        $extenderModifier = new \Kss\Modifier($name, $description);
 
         $exampleHtml = '<button class="modifier button $modifierClass">test3</button>';
         $html = $extenderModifier->getExampleHtml($exampleHtml);
@@ -166,7 +166,7 @@ class ModifierTest extends \PHPUnit_Framework_TestCase
     {
         $name = '.extenderModifier @extend .button';
         $description = 'This is a test modifier that extends from .button';
-        $extenderModifier = new \Scan\Kss\Modifier($name, $description);
+        $extenderModifier = new \Kss\Modifier($name, $description);
 
         // Note that this also preserves the similar class name
         // 'button-success'
@@ -183,7 +183,7 @@ class ModifierTest extends \PHPUnit_Framework_TestCase
     {
         $name = '.extenderModifier @extend .button';
         $description = 'This is a test modifier that extends from .button';
-        $extenderModifier = new \Scan\Kss\Modifier($name, $description);
+        $extenderModifier = new \Kss\Modifier($name, $description);
 
         $exampleHtml = '<button class="button-success $modifierClass button">test3</button>';
         $html = $extenderModifier->getExampleHtml($exampleHtml);

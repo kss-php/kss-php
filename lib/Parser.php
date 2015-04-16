@@ -7,10 +7,10 @@
  * them for KSS Comment Blocks
  */
 
-namespace Scan\Kss;
+namespace Kss;
 
 use Symfony\Component\Finder\Finder;
-use Scan\Kss\Exception\UnexpectedValueException;
+use Kss\Exception\UnexpectedValueException;
 
 class Parser
 {
@@ -173,7 +173,7 @@ class Parser
             return;
         }
 
-        uasort($this->sections, '\Scan\Kss\Section::alphaDepthScoreSort');
+        uasort($this->sections, '\Kss\Section::alphaDepthScoreSort');
         $this->sectionsSortedByReference = true;
     }
 
@@ -184,7 +184,7 @@ class Parser
      */
     protected function sortSectionsByDepth()
     {
-        uasort($this->sections, '\Scan\Kss\Section::depthSort');
+        uasort($this->sections, '\Kss\Section::depthSort');
         $this->sectionsSortedByReference = false;
     }
 

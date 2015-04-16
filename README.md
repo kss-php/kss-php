@@ -3,7 +3,7 @@
 This is a PHP implementation of [Knyle Style Sheets](http://warpspire.com/kss) (KSS). KSS attempts to provide a methodology for writing maintainable, documented CSS within a team. Specifically, KSS is a documentation specification and styleguide format. It is **not** a preprocessor, CSS framework, naming convention, or specificity guideline.
 
 * **[The Spec (What KSS is)](https://github.com/kneath/kss/blob/master/SPEC.md)**
-* **[Example living styleguide](https://github.com/scaninc/kss-php/tree/master/example)**
+* **[Example living styleguide](https://github.com/kss-php/kss-php/tree/master/example)**
 
 ## KSS in a nutshell
 
@@ -47,10 +47,10 @@ This repository includes a php library suitable for parsing SASS, SCSS, and CSS 
 <?php
 
 require_once('../vendors/autoload.php');
-$styleguide = new \Scan\Kss\Parser('public/stylesheets')
+$styleguide = new Kss\Parser('public/stylesheets')
 
 $section = $styleguide->getSection('Buttons - Star Button');
-// Returns a \Scan\Kss\Section object
+// Returns a Kss\Section object
 
 echo $section->getTitle();
 // Echoes "Star Button"
@@ -62,7 +62,7 @@ echo $section->getMarkup();
 // echoes "<a class="button star $modifierClass">Button</a>"
 
 $modifier = current($section->getModifiers());
-// Returns a \Scan\Kss\Modifier object
+// Returns a Kss\Modifier object
 
 echo $modifier->getName();
 // echoes ':hover'
@@ -81,10 +81,10 @@ echo $modifier->getExampleHtml();
 
 The documenting syntax and php library are intended to generate styleguides automatically. To do this, you'll need to leverage a small javascript library that generates class styles for pseudo-class styles (`:hover`, `:disabled`, etc).
 
-* [kss.coffee](https://github.com/scaninc/kss-php/blob/master/lib/Scan/kss.coffee)
-* [kss.js](https://github.com/scaninc/kss-php/blob/master/example/public/js/kss.js) (compiled js)
+* [kss.coffee](https://github.com/kss-php/kss-php/blob/master/lib/kss.coffee)
+* [kss.js](https://github.com/kss-php/kss-php/blob/master/example/js/kss.js) (compiled js)
 
-For an example of how to generate a styleguide, check out the [`example`](https://github.com/scaninc/kss-php/tree/master/example) php pages.
+For an example of how to generate a styleguide, check out the [`example`](https://github.com/kss-php/kss-php/tree/master/example) php pages.
 
 ## Dependencies
 
@@ -103,4 +103,4 @@ $ sudo mv composer.phar /usr/local/bin/composer
 
 ## Symfony2 Bundle
 
-If your project uses [symfony2](http://symfony.com/), consider using the [KSS Bundle] (https://github.com/scaninc/ScanKssBundle) as well. The KSS Bundle uses Twig templates to make the styleguide block easier to customize and include in your views.
+If your project uses [symfony2](http://symfony.com/), consider using the [KSS Bundle] (https://github.com/kss-php/KssBundle) as well. The KSS Bundle uses Twig templates to make the styleguide block easier to customize and include in your views.

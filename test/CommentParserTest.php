@@ -1,6 +1,6 @@
 <?php
 
-namespace Scan\Test;
+namespace Test;
 
 class CommentParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -8,7 +8,7 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $parser = new \Scan\Kss\CommentParser(new \SplFileObject('test/fixtures/comments.txt'));
+        $parser = new \Kss\CommentParser(new \SplFileObject('test/fixtures/comments.txt'));
         self::$blocks = $parser->getBlocks();
     }
 
@@ -17,7 +17,7 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isSingleLineComment()
     {
-        $this->assertTrue(\Scan\Kss\CommentParser::isSingleLineComment('// yes'));
+        $this->assertTrue(\Kss\CommentParser::isSingleLineComment('// yes'));
     }
 
     /**
@@ -25,7 +25,7 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isNotSingleLineComment()
     {
-        $this->assertFalse(\Scan\Kss\CommentParser::isSingleLineComment('no'));
+        $this->assertFalse(\Kss\CommentParser::isSingleLineComment('no'));
     }
 
     /**
@@ -33,7 +33,7 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isStartMultiLineComment()
     {
-        $this->assertTrue(\Scan\Kss\CommentParser::isStartMultiLineComment('/* yes'));
+        $this->assertTrue(\Kss\CommentParser::isStartMultiLineComment('/* yes'));
     }
 
     /**
@@ -41,7 +41,7 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isNotStartMultiLineComment()
     {
-        $this->assertFalse(\Scan\Kss\CommentParser::isStartMultiLineComment('no'));
+        $this->assertFalse(\Kss\CommentParser::isStartMultiLineComment('no'));
     }
 
     /**
@@ -49,8 +49,8 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isEndMultiLineComment()
     {
-        $this->assertTrue(\Scan\Kss\CommentParser::isEndMultiLineComment('yes */'));
-        $this->assertTrue(\Scan\Kss\CommentParser::isEndMultiLineComment('*/'));
+        $this->assertTrue(\Kss\CommentParser::isEndMultiLineComment('yes */'));
+        $this->assertTrue(\Kss\CommentParser::isEndMultiLineComment('*/'));
     }
 
     /**
@@ -58,7 +58,7 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
      */
     public function isEndStartMultiLineComment()
     {
-        $this->assertFalse(\Scan\Kss\CommentParser::isEndMultiLineComment('no'));
+        $this->assertFalse(\Kss\CommentParser::isEndMultiLineComment('no'));
     }
 
     /**
@@ -66,7 +66,7 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseSingleLineComment()
     {
-        $this->assertEquals(' yes', \Scan\Kss\CommentParser::parseSingleLineComment('// yes'));
+        $this->assertEquals(' yes', \Kss\CommentParser::parseSingleLineComment('// yes'));
     }
 
     /**
@@ -74,7 +74,7 @@ class CommentParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseMultiLineComment()
     {
-        $this->assertEquals(' yes', \Scan\Kss\CommentParser::parseMultiLineComment('/* yes */'));
+        $this->assertEquals(' yes', \Kss\CommentParser::parseMultiLineComment('/* yes */'));
     }
 
     /**

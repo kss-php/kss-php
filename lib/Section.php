@@ -7,7 +7,7 @@
  * modifiers, and a section reference.
  */
 
-namespace Scan\Kss;
+namespace Kss;
 
 class Section
 {

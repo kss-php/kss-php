@@ -1,5 +1,5 @@
 {
-    "name": "scan/kss-php",
+    "name": "kss-php/kss-php",
     "description": "A PHP implementation of KSS: a methodology for documenting CSS and generating styleguides",
     "keywords": [
         "kss",
@@ -23,7 +23,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Scan\\Kss\\": "lib/"
+            "Kss\\": "lib/"
         }
     },
     "config": {

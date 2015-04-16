@@ -1,6 +1,6 @@
 <?php
 
-namespace Scan\Kss\Exception;
+namespace Kss\Exception;
 
 class UnexpectedValueException extends \UnexpectedValueException implements ExceptionInterface
 {

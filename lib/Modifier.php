@@ -6,7 +6,7 @@
  * Object to represent the modifiers section of a KSS Comment Block
  */
 
-namespace Scan\Kss;
+namespace Kss;
 
 class Modifier
 {

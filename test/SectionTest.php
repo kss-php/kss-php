@@ -1,8 +1,8 @@
 <?php
 
-namespace Scan\Test;
+namespace Test;
 
-use \Scan\Kss\Section;
+use \Kss\Section;
 
 class SectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -998,7 +998,7 @@ comment;
             '2.1.2' => new Section('Styleguide 2.1.2'),
         );
 
-        uasort($sections, '\Scan\Kss\Section::depthSort');
+        uasort($sections, '\Kss\Section::depthSort');
 
         $keys = array_keys($sections);
         $expectedKeys = array(
@@ -1029,7 +1029,7 @@ comment;
             'Tables.Body.Alt' => new Section('Styleguide Tables.Body.Alt'),
         );
 
-        uasort($sections, '\Scan\Kss\Section::depthSort');
+        uasort($sections, '\Kss\Section::depthSort');
 
         $keys = array_keys($sections);
         $expectedKeys = array(
@@ -1061,7 +1061,7 @@ comment;
             'Tables - Body - Alt' => new Section('Styleguide Tables - Body - Alt'),
         );
 
-        uasort($sections, '\Scan\Kss\Section::depthSort');
+        uasort($sections, '\Kss\Section::depthSort');
 
         $keys = array_keys($sections);
         $expectedKeys = array(
@@ -1101,7 +1101,7 @@ comment;
             'Tables.Body.Main' => new Section('Styleguide Tables.Body.Main'),
         );
 
-        uasort($sections, '\Scan\Kss\Section::depthSort');
+        uasort($sections, '\Kss\Section::depthSort');
 
         $keys = array_keys($sections);
         $expectedKeys = array(
@@ -1140,7 +1140,7 @@ comment;
             '2.1.2' => new Section('Styleguide 2.1.2'),
         );
 
-        uasort($sections, '\Scan\Kss\Section::depthScoreSort');
+        uasort($sections, '\Kss\Section::depthScoreSort');
 
         $keys = array_keys($sections);
         $expectedKeys = array(
@@ -1179,7 +1179,7 @@ comment;
             'Tables.Body.Main' => new Section('Styleguide Tables.Body.Main'),
         );
 
-        uasort($sections, '\Scan\Kss\Section::alphaDepthScoreSort');
+        uasort($sections, '\Kss\Section::alphaDepthScoreSort');
 
         $keys = array_keys($sections);
         $expectedKeys = array(

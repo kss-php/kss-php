@@ -1,6 +1,6 @@
 <?php
 
-namespace Scan\Test;
+namespace Test;
 
 class ParametersTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +10,7 @@ class ParametersTest extends \PHPUnit_Framework_TestCase
     {
         $name = '$start';
         $description = 'This is a test parameter';
-        self::$parameter = new \Scan\Kss\Parameter($name, $description);
+        self::$parameter = new \Kss\Parameter($name, $description);
     }
 
     /**

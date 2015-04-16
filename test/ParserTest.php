@@ -1,6 +1,6 @@
 <?php
 
-namespace Scan\Test;
+namespace Test;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -9,7 +9,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseScss()
     {
-        $parser = new \Scan\Kss\Parser('test/fixtures/scss');
+        $parser = new \Kss\Parser('test/fixtures/scss');
         $this->assertEquals('Your standard form button.', $parser->getSection('2.1.1')->getDescription());
         return $parser;
     }
@@ -19,7 +19,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseScssWords()
     {
-        $parser = new \Scan\Kss\Parser('test/fixtures/scss-words');
+        $parser = new \Kss\Parser('test/fixtures/scss-words');
         $this->assertEquals(
             'Your standard form button.',
             $parser->getSection('Buttons - Standard')->getDescription()
@@ -32,7 +32,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseSass()
     {
-        $parser = new \Scan\Kss\Parser('test/fixtures/sass');
+        $parser = new \Kss\Parser('test/fixtures/sass');
         $this->assertEquals(
             'A button suitable for giving stars to someone.',
             $parser->getSection('2.2.1')->getDescription()
@@ -45,7 +45,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseLess()
     {
-        $parser = new \Scan\Kss\Parser('test/fixtures/less');
+        $parser = new \Kss\Parser('test/fixtures/less');
         $this->assertEquals('Your standard form button.', $parser->getSection('2.1.1')->getDescription());
         return $parser;
     }
@@ -55,7 +55,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseCss()
     {
-        $parser = new \Scan\Kss\Parser('test/fixtures/css');
+        $parser = new \Kss\Parser('test/fixtures/css');
         $this->assertEquals('Your standard form button.', $parser->getSection('2.1.1')->getDescription());
         return $parser;
     }
@@ -65,7 +65,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseStyl()
     {
-        $parser = new \Scan\Kss\Parser('test/fixtures/styl');
+        $parser = new \Kss\Parser('test/fixtures/styl');
         $this->assertEquals('Your standard form button.', $parser->getSection('2.1.1')->getDescription());
         return $parser;
     }
@@ -75,7 +75,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function parseStylus()
     {
-        $parser = new \Scan\Kss\Parser('test/fixtures/stylus');
+        $parser = new \Kss\Parser('test/fixtures/stylus');
         $this->assertEquals('Your standard form button.', $parser->getSection('2.1.1')->getDescription());
         return $parser;
     }
@@ -202,7 +202,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException Scan\Kss\Exception\UnexpectedValueException
+     * @expectedException Kss\Exception\UnexpectedValueException
      * @depends parseScss
      */
     public function getSectionNotFound($parser)
@@ -212,7 +212,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException Scan\Kss\Exception\UnexpectedValueException
+     * @expectedException Kss\Exception\UnexpectedValueException
      * @depends parseScssWords
      */
     public function getSectionWordsNotFound($parser)
@@ -453,7 +453,7 @@ This is a style comment
 Styleguide 1.2.3
 comment;
 
-        $this->assertTrue(\Scan\Kss\Parser::isKssBlock($comment));
+        $this->assertTrue(\Kss\Parser::isKssBlock($comment));
     }
 
     /**
@@ -470,7 +470,7 @@ This is a style comment
 Styleguide Forms.Buttons
 comment;
 
-        $this->assertTrue(\Scan\Kss\Parser::isKssBlock($comment));
+        $this->assertTrue(\Kss\Parser::isKssBlock($comment));
     }
 
     /**
@@ -487,7 +487,7 @@ This is a style comment
 Styleguide Forms - Buttons - Special Actions;
 comment;
 
-        $this->assertTrue(\Scan\Kss\Parser::isKssBlock($comment));
+        $this->assertTrue(\Kss\Parser::isKssBlock($comment));
     }
 
     /**
@@ -504,7 +504,7 @@ This is a style comment
 No styleguide reference;
 comment;
 
-        $this->assertTrue(\Scan\Kss\Parser::isKssBlock($comment));
+        $this->assertTrue(\Kss\Parser::isKssBlock($comment));
     }
 
     /**
@@ -517,6 +517,6 @@ This is just a normal comment
 It has two lines
 comment;
 
-        $this->assertFalse(\Scan\Kss\Parser::isKssBlock($comment));
+        $this->assertFalse(\Kss\Parser::isKssBlock($comment));
     }
 }
