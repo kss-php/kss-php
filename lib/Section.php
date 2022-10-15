@@ -506,7 +506,7 @@ class Section
         if ($a->getDepth() == $b->getDepth()) {
             return self::alphaDepthScoreSort($a, $b);
         }
-        return $a->getDepth() > $b->getDepth();
+        return ($a->getDepth() <=> $b->getDepth());
     }
 
     /**
@@ -519,7 +519,7 @@ class Section
      */
     public static function depthScoreSort(Section $a, Section $b)
     {
-        return $a->getDepthScore() > $b->getDepthScore();
+        return ($a->getDepthScore() <=> $b->getDepthScore());
     }
 
     /**

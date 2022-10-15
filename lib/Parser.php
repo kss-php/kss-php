@@ -184,7 +184,7 @@ class Parser
      */
     protected function sortSectionsByDepth()
     {
-        uasort($this->sections, '\Kss\Section::depthSort');
+        uasort($this->sections, [Section::class, 'depthSort']);
         $this->sectionsSortedByReference = false;
     }
 
