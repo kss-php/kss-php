@@ -170,7 +170,7 @@ class Section
      * Returns the markup for the normal element (without modifierclass)
      *
      * @param string $replacement Replacement for $modifierClass variable
-     * @return void
+     * @return string
      */
     public function getMarkupNormal($replacement = '')
     {
@@ -257,7 +257,7 @@ class Section
 
                 if ($lastIndent && $indent > $lastIndent) {
                     $modifier = end($modifiers);
-                    $modifier->setDescription($modifier->getDescription() + trim($line));
+                    $modifier->setDescription($modifier->getDescription() . trim($line));
                 } else {
                     $lineParts = explode(' - ', $line);
 
@@ -488,7 +488,7 @@ class Section
         $sectionParts = explode('.', $reference);
         $score = 0;
         foreach ($sectionParts as $level => $part) {
-            $score += $part * (1 / pow(10, $level));
+            $score += (int)$part * (1 / pow(10, $level));
         }
         return $score;
     }
@@ -506,7 +506,7 @@ class Section
         if ($a->getDepth() == $b->getDepth()) {
             return self::alphaDepthScoreSort($a, $b);
         }
-        return $a->getDepth() > $b->getDepth();
+        return ($a->getDepth() <=> $b->getDepth());
     }
 
     /**
@@ -519,7 +519,7 @@ class Section
      */
     public static function depthScoreSort(Section $a, Section $b)
     {
-        return $a->getDepthScore() > $b->getDepthScore();
+        return ($a->getDepthScore() <=> $b->getDepthScore());
     }
 
     /**

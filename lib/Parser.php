@@ -73,7 +73,7 @@ class Parser
      *
      * @return Section
      *
-     * @throws UnexepectedValueException if reference does not exist
+     * @throws UnexpectedValueException if reference does not exist
      */
     public function getSection($reference)
     {
@@ -184,7 +184,7 @@ class Parser
      */
     protected function sortSectionsByDepth()
     {
-        uasort($this->sections, '\Kss\Section::depthSort');
+        uasort($this->sections, [Section::class, 'depthSort']);
         $this->sectionsSortedByReference = false;
     }
 

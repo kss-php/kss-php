@@ -2,12 +2,14 @@
 
 namespace Test;
 
-class ModifierTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ModifierTest extends TestCase
 {
     protected static $modifier;
     protected static $extenderModifier;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $name = '.modifier';
         $description = 'This is a test modifier';

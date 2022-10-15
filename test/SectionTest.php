@@ -3,12 +3,13 @@
 namespace Test;
 
 use \Kss\Section;
+use PHPUnit\Framework\TestCase;
 
-class SectionTest extends \PHPUnit_Framework_TestCase
+class SectionTest extends TestCase
 {
     protected static $section;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $commentText = <<<'comment'
 # Form Button

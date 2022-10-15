@@ -2,11 +2,13 @@
 
 namespace Test;
 
-class ParametersTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ParametersTest extends TestCase
 {
     protected static $parameter;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $name = '$start';
         $description = 'This is a test parameter';
