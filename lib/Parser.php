@@ -73,7 +73,7 @@ class Parser
      *
      * @return Section
      *
-     * @throws UnexepectedValueException if reference does not exist
+     * @throws UnexpectedValueException if reference does not exist
      */
     public function getSection($reference)
     {

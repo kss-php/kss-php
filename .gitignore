@@ -1,3 +1,4 @@
 vendor/
 bin/
 phpunit.xml
+.phpunit.result.cache

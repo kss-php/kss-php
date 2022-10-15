@@ -2,7 +2,10 @@
 
 namespace Test;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+use Kss\Exception\UnexpectedValueException;
+use PHPUnit\Framework\TestCase;
+
+class ParserTest extends TestCase
 {
     /**
      * @test
@@ -202,21 +205,21 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException Kss\Exception\UnexpectedValueException
      * @depends parseScss
      */
     public function getSectionNotFound($parser)
     {
+        $this->expectException(UnexpectedValueException::class);
         $this->assertEmpty($parser->getSection('200.1.1')->getReference());
     }
 
     /**
      * @test
-     * @expectedException Kss\Exception\UnexpectedValueException
      * @depends parseScssWords
      */
     public function getSectionWordsNotFound($parser)
     {
+        $this->expectException(UnexpectedValueException::class);
         $this->assertEmpty($parser->getSection('Tables - Zebra')->getReference());
     }
 

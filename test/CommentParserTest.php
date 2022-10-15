@@ -2,11 +2,13 @@
 
 namespace Test;
 
-class CommentParserTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class CommentParserTest extends TestCase
 {
     protected static $blocks;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $parser = new \Kss\CommentParser(new \SplFileObject('test/fixtures/comments.txt'));
         self::$blocks = $parser->getBlocks();
